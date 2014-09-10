@@ -26,6 +26,7 @@ import json
 import yt_upload
 from oauth2client.tools import argparser
 from apiclient.errors import HttpError
+from adwords_video_csv import AwvCsv
 
 def generate_videos(config_file, youtube_upload, preview_line, flags):
     """Generate custom videos according to the given configuration file name.
@@ -35,6 +36,10 @@ def generate_videos(config_file, youtube_upload, preview_line, flags):
     output video for each line in the data file.
     """
     config = load_config(config_file)
+    adwords = config['adwords']
+    awv_csv_file = adwords['csv_file']
+    campaigns = {}
+    ads = {}
     data = read_csv_file(config['data_file'], ',')
     if preview_line is not None:
         lines = [[(preview_line - 1), data[preview_line - 1]]]
@@ -45,7 +50,19 @@ def generate_videos(config_file, youtube_upload, preview_line, flags):
         if youtube_upload:
             title = replace_vars(config['video_title'], row)
             description = replace_vars(config['video_description'], row)
-            upload_to_youtube(video, title, description, flags)
+            video_id = upload_to_youtube(video, title, description, flags)
+            if video_id is not None:
+                row['video_id'] = video_id
+                campaign = replace_vars_in_dict(adwords['campaign'], row)
+                campaigns[campaign['name']] = campaign
+                ad = replace_vars_in_dict(adwords['ad'], row)
+                ad['Campaign'] = campaign['name']
+                ad['Video id'] = video_id
+                ads[ad['name']] = ad
+    # Write AdWords CSV
+    if youtube_upload:
+        awv_csv = AwvCsv(campaigns, ads)
+        awv_csv.write_to_file(awv_csv_file)
 
 def generate_video(config, row, row_num):
     row['$id'] = str(row_num)
@@ -152,9 +169,13 @@ def write_to_temp_file(text):
 
 def load_config(config_file_name):
     """Load the JSON configuration file and return its structure."""
-    with open(config_file_name, 'r') as f:
-        retval = json.load(f)
-    return retval
+    try:
+        with open(config_file_name, 'r') as f:
+            retval = json.load(f)
+        return retval
+    except Exception as e:
+        print "ERROR reading config file:"
+        raise e
 
 def test_read_csv_file():
     print read_csv_file('sample.csv', ',')
@@ -192,14 +213,17 @@ def replace_vars_in_overlay(overlay_configs, values):
     """Replace all occurrences of variables in the configs with the values."""
     retval = []
     for o in overlay_configs:
-        row = {}
-        for c_key, c_value in o.iteritems():
-            if isinstance(c_value, basestring):
-                row[c_key] = replace_vars(c_value, values)
-            else:
-                row[c_key] = c_value
-        retval.append(row)
+        retval.append(replace_vars_in_dict(o, values))
     return retval
+
+def replace_vars_in_dict(dic, values):
+    row = {}
+    for c_key, c_value in dic.iteritems():
+        if isinstance(c_value, basestring):
+            row[c_key] = replace_vars(c_value, values)
+        else:
+            row[c_key] = c_value
+    return row
 
 def replace_vars(s, values):
     """Replace all occurrences of variables in the given string with values"""
@@ -207,7 +231,6 @@ def replace_vars(s, values):
     for v_key, v_value in values.iteritems():
         replace = re.compile(re.escape('{{' + v_key + '}}'), re.IGNORECASE)
         retval = re.sub(replace, v_value, retval)
-        #value = value.replace('{{' + v_key.lower() + '}}', v_value)
     return retval
 
 def upload_to_youtube(video, title, description, flags):
@@ -216,13 +239,14 @@ def upload_to_youtube(video, title, description, flags):
     flags.description = description
     flags.keywords = "" #TODO add video keywords config
     flags.category = 22 #TODO add video category config
-    flags.privacyStatus = 'private' #TODO add video privacy config
+    flags.privacyStatus = 'unlisted' #TODO add video privacy config
     flags.noauth_local_webserver = True
     youtube = yt_upload.get_authenticated_service(flags)
     try:
-        yt_upload.initialize_upload(youtube, flags)
+        return yt_upload.initialize_upload(youtube, flags)
     except HttpError, e:
         print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
+    return None
 
 def main():
     parser = argparse.ArgumentParser(parents=[argparser])
@@ -232,8 +256,7 @@ def main():
             action="store_true")
     parser.add_argument("--preview_line",
             help="Generate only one video, for the given CSV line number",
-            type=int,
-            default=1)
+            type=int)
     args = parser.parse_args()
     generate_videos(args.config_file, args.youtube_upload, args.preview_line, args)
 

@@ -39,5 +39,34 @@
             "start_time": 5,
             "end_time": 7
         }
-    ]
+    ],
+    "adwords": {
+        "csv_file": "campaigns.csv",
+        "campaign": {
+            "name": "Video campaign {{nome}}",
+            "Status": "Paused",
+            "Budget": "1.00",
+            "Network": "Google Display Network, YouTube Search, YouTube Videos",
+            "Delivery method": "Standard",
+            "Start date": "2014-09-10",
+            "End date": "#n/a",
+            "Ad rotation": "Optimize for views",
+            "Frequency cap": "#n/a",
+            "Mobile bid modifier": "0%",
+            "Max CPV": "$0.01",
+            "Location": "{{cidade}}"
+        },
+        "ad": {
+            "name": "Video ad {{nome}}",
+            "Thumbnail": "default",
+            "Headline": "Listen to Vogon Poetry",
+            "Description line one": "The Vogons Write the Best Poetry",
+            "Description line two": "Daily shows in {{cidade}}",
+            "Display Url": "youtube.com/channel/UCvCHMSKUhFoP0mfNxznxuPA",
+            "Destination Url": "http://youtube.com/channel/UCvCHMSKUhFoP0mfNxznxuPA",
+            "YouTube destination": "Channel",
+            "Showing on": "In-display, In-stream",
+            "Companion banner": "#n/a"
+        }
+    }
 }
