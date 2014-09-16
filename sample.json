@@ -6,36 +6,30 @@
     "data_file": "sample.csv",
     "images": [
         {
-            "image": "arthur.png",
-            "x": 10,
-            "y": 10,
+            "image": "{{Logotipo}}",
+            "x": 760,
+            "y": 200,
             "start_time": 3,
-            "end_time": 5
-        },{
-            "image": "arthur.png",
-            "x": 300,
-            "y": 300,
-            "start_time": 5,
             "end_time": 7
         }
     ],
     "text_lines": [
         {
-            "text": "Compre na {{nome}}",
-            "font": "/Library/Fonts/Arial\\ Black.ttf",
+            "text": "Compre na\n{{nome}}",
+            "font": "/Library/Fonts/Impact.ttf",
             "font_size": 80,
-            "font_color": "red",
-            "x": 10,
-            "y": 400,
+            "font_color": "#162938",
+            "x": 500,
+            "y": 500,
             "start_time": 3,
             "end_time": 5
         },{
-            "text": "Por apenas {{preço}}",
-            "font": "/Library/Fonts/Comic\\ Sans\\ MS.ttf",
+            "text": "A partir de {{preço}}",
+            "font": "/Library/Fonts/Impact.ttf",
             "font_size": 80,
-            "font_color": "blue",
-            "x": 300,
-            "y": 250,
+            "font_color": "#162938",
+            "x": 500,
+            "y": 500,
             "start_time": 5,
             "end_time": 7
         }
