@@ -168,8 +168,8 @@ def text_filter(input_stream, text, font, font_size, font_color, x, y, t_start,
     text_file_name = write_to_temp_file(text)
     out_str = '' if output_stream is None else ('['+output_stream+']')
     return ('[' + input_stream + '] '
-            'drawtext=fontfile=' + font + ':'
-            'textfile=' + text_file_name + ':'
+            'drawtext=fontfile=' + escape_path(font) + ':'
+            'textfile=' + escape_path(text_file_name) + ':'
             'fontsize=' + str(font_size) + ':'
             'fontcolor=' + font_color + ':'
             'x=' + str(x) + ':y=' + str(y) + ':'
@@ -184,6 +184,10 @@ def write_to_temp_file(text):
     with os.fdopen(fd, 'w') as f:
         f.write(text.encode('utf8'))
     return text_file_name
+
+def escape_path(path):
+    """Escape Windows path slashes, colons and spaces, adding extra escape for ffmpeg."""
+    return path.replace('\\','\\\\\\\\').replace(':','\\\\:').replace(' ','\\\\ ')
 
 def load_config(config_file_name):
     """Load the JSON configuration file and return its structure."""
