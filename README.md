@@ -1,4 +1,4 @@
-Vogon: scalable customization of video campaigns.
+## Vogon: scalable customization of video campaigns
 
 Vogon combines a video creative, a data table and a layout specification,
 generating a copy of the video creative combined with each line of the data
