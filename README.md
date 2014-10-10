@@ -21,7 +21,8 @@ In order to run Vogon, you need to have the following installed first:
 
 * Python 2.7.x (not 3.X): https://www.python.org/download/
   * For Windows: on the second step of the wizard, check the "Add python.exe to Path" option
-* FFmpeg: https://ffmpeg.org/download.html
+* FFmpeg:
+  * For Mac and Linux, go to [this page](https://ffmpeg.org/download.html), but **don't click the big green button**. Instead, click on the icon for your OS below it.
   * For Windows, download from [this page](http://ffmpeg.zeranoe.com/builds/), and look for the "32-bit static" build
   * Instructions [here](http://www.wikihow.com/Install-FFmpeg-on-Windows)
 * To make it easier to install the following modules, it's recommended to install PIP: https://pip.pypa.io/en/latest/installing.html 
