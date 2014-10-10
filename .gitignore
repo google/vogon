@@ -1,1 +1,3 @@
 *.pyc
+*-oauth2.json
+.DS_Store
