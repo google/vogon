@@ -34,8 +34,8 @@ Vogon can upload videos to Youtube using the Youtube API and help you create AdW
 
 0. Create a project in the [Google Developers Console](https://console.developers.google.com/project)
   0. In the Console, create a new project with the "Create Project" button
-  0. Click "Enable an API" and activate the "Youtube V3" API
-  0. In "APIs and Auth -> Credentials", create a new Client ID for a native application
+  0. Click "Enable an API" and activate the "Youtube Data V3" API
+  0. In "APIs and Auth -> Credentials", create a new Client ID for a installed application
   0. Download the JSON file with the "Download JSON" button, and save it in the directory where you will run Vogon (together with your configuration, data and image files)
   0. The account that manages the Youtube channel and the AdWords account must both have Edit access to the project, which can be configured in the "Permissions" section of the Console
 0. The Youtube and AdWords accounts must be linked - [see instructions](https://support.google.com/youtube/answer/3063482)
