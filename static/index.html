@@ -15,27 +15,27 @@
 
         <h3>Files</h3>
         <div class="row"><div class="col-md-2">Data file</div>
-            <div class="col-md-10"> <input type="text" 
+            <div class="col-md-10"> <input type="text" class="form-control"
                 ng-model="config.data_file"> </div></div>
         <div class="row"><div class="col-md-2">Base video file</div>
-            <div class="col-md-10"> <input type="text" 
+            <div class="col-md-10"> <input type="text" class="form-control"
                 ng-model="config.video"> </div></div>
-        <div class="row"><div class="col-md-2">Generated video file names</div>
-        <div class="col-md-10"> <input type="text" 
+        <div class="row"><div class="col-md-2">Generated video file</div>
+            <div class="col-md-10"> <input type="text" class="form-control"
                 ng-model="config.output_video"></div></div>
         <div class="row"><div class="col-md-2">AdWords CSV file name</div>
-        <div class="col-md-10"> <input type="text" 
+            <div class="col-md-10"> <input type="text" class="form-control"
                 ng-model="config.adwords.csv_file"></div></div>
         <div class="row"><div class="col-md-2">FFMPEG executable path</div>
-        <div class="col-md-10"> <input type="text" 
+            <div class="col-md-10"> <input type="text" class="form-control"
                 ng-model="config.ffmpeg_path"></div></div>
 
         <h3>Youtube</h3>
         <div class="row"><div class="col-md-2">Video title</div>
-            <div class="col-md-10"> <input type="text" 
+            <div class="col-md-10"> <input type="text" class="form-control"
                 ng-model="config.video_title"></div></div>
         <div class="row"><div class="col-md-2">Video description</div>
-            <div class="col-md-10"> <input type="text" 
+            <div class="col-md-10"> <input type="text" class="form-control"
                 ng-model="config.video_description"></div></div>
 
         <h3>AdWords</h3>
@@ -44,7 +44,7 @@
         <div ng-repeat="(key,value) in config.adwords.campaign track by key">
             <div class="row">
                 <div class="col-md-2">{{key}}</div>
-                <div class="col-md-10"> <input type="text" 
+                <div class="col-md-10"> <input type="text" class="form-control"
                     ng-model="config.adwords.campaign[key]"></div>
             </div>
         </div>
@@ -53,7 +53,7 @@
         <div ng-repeat="(key,value) in config.adwords.ad track by key">
             <div class="row">
                 <div class="col-md-2">{{key}}</div>
-                <div class="col-md-10"> <input type="text" 
+                <div class="col-md-10"> <input type="text" class="form-control"
                     ng-model="config.adwords.ad[key]"></div>
             </div>
         </div>
@@ -61,73 +61,83 @@
         <h3>Video Overlays</h3>
 
         <h4>Text</h4>
+        <table class="table">
+            <thead><tr>
+            <th class="col-md-1"> Start Time </th>
+            <th class="col-md-1"> End Time </th>
+            <th class="col-md-1"> X </th>
+            <th class="col-md-1"> Y </th>
+            <th class="col-md-2"> Text </th>
+            <th class="col-md-2"> Font </th>
+            <th class="col-md-1"> Font Size </th>
+            <th class="col-md-1"> Font Color </th>
+            <th class="col-md-1">  </th>
+            </tr></thead>
+            <tbody>
+        <tr ng-repeat="line in config.text_lines">
+            <td class="col-md-1">
+                <input type="text" ng-model="line.start_time" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="text" ng-model="line.end_time" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="text" ng-model="line.x" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="text" ng-model="line.y" class="form-control">
+            </td>
+            <td class="col-md-2">
+                <textarea ng-model="line.text" class="form-control" rows="2"></textarea>
+            </td>
+            <td class="col-md-2">
+                <input type="text" ng-model="line.font" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="text" ng-model="line.font_size" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="text" ng-model="line.font_color" class="form-control">
+            </td>
+            <td class="col-md-1"><input type="button" value="Delete" class="btn-primary" ng-click="delete(config.text_lines, $index)"></td>
+        </tr></tbody></table>
         <div class="row">
-            <div class="col-md-1"> Start Time </div>
-            <div class="col-md-1"> End Time </div>
-            <div class="col-md-1"> X </div>
-            <div class="col-md-1"> Y </div>
-            <div class="col-md-2"> Text </div>
-            <div class="col-md-2"> Font </div>
-            <div class="col-md-1"> Font Size </div>
-            <div class="col-md-1"> Font Color </div>
+            <div class="col-md-2"><input type="button" value="Add Text" class="btn-primary" ng-click="addText()"></div>
         </div>
-        <div ng-repeat="line in config.text_lines" class="row">
-            <div class="col-md-1">
-                <input type="text" ng-model="line.start_time" size="4">
-            </div>
-            <div class="col-md-1">
-                <input type="text" ng-model="line.end_time" size="4">
-            </div>
-            <div class="col-md-1">
-                <input type="text" ng-model="line.x" size="4">
-            </div>
-            <div class="col-md-1">
-                <input type="text" ng-model="line.y" size="4">
-            </div>
-            <div class="col-md-2">
-                <input type="text" ng-model="line.text">
-            </div>
-            <div class="col-md-2">
-                <input type="text" ng-model="line.font">
-            </div>
-            <div class="col-md-1">
-                <input type="text" ng-model="line.font_size" size="4">
-            </div>
-            <div class="col-md-1">
-                <input type="text" ng-model="line.font_color" size="4">
-            </div>
-            <div class="col-md-2"><input type="button" value="Delete" class="btn-primary" ng-click="delete(config.text_lines, $index)"></div>
-        </div>
-        <input type="button" value="Add" class="btn-primary" ng-click="addText()">
 
         <h4>Images</h4>
+        <table class="table">
+            <thead><tr>
+            <th class="col-md-1"> Start Time </th>
+            <th class="col-md-1"> End Time </th>
+            <th class="col-md-1"> X </th>
+            <th class="col-md-1"> Y </th>
+            <th class="col-md-2"> Image </th>
+            <th class="col-md-1">  </th>
+            </th></thead>
+            <tbody>
+        <tr ng-repeat="line in config.images">
+            <td class="col-md-1">
+                <input type="number" ng-model="line.start_time" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="number" ng-model="line.end_time" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="number" ng-model="line.x" class="form-control">
+            </td>
+            <td class="col-md-1">
+                <input type="number" ng-model="line.y" class="form-control">
+            </td>
+            <td class="col-md-2">
+                <input type="text" ng-model="line.image" class="form-control">
+            </td>
+            <td class="col-md-1"><input type="button" value="Delete" class="btn-primary" ng-click="delete(config.images, $index)"></td>
+        </tr>
+            </tbody>
+        </table>
         <div class="row">
-            <div class="col-md-1"> Start Time </div>
-            <div class="col-md-1"> End Time </div>
-            <div class="col-md-1"> X </div>
-            <div class="col-md-1"> Y </div>
-            <div class="col-md-2"> Image </div>
-        </div>
-        <div ng-repeat="line in config.images" class="row">
-            <div class="col-md-1">
-                <input type="number" ng-model="line.start_time" size="4">
-            </div>
-            <div class="col-md-1">
-                <input type="number" ng-model="line.end_time" size="4">
-            </div>
-            <div class="col-md-1">
-                <input type="number" ng-model="line.x" size="4">
-            </div>
-            <div class="col-md-1">
-                <input type="number" ng-model="line.y" size="4">
-            </div>
-            <div class="col-md-2">
-                <input type="text" ng-model="line.image">
-            </div>
-            <div class="col-md-2"><input type="button" value="Delete" class="btn-primary" ng-click="delete(config.images, $index)"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-2"><input type="button" value="Add" class="btn-primary" ng-click="addImage()"></div>
+            <div class="col-md-2"><input type="button" value="Add Image" class="btn-primary" ng-click="addImage()"></div>
         </div>
         
         <div class="row" style="padding-top:50px;padding-bottom:50px">
