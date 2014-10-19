@@ -89,7 +89,11 @@ def generate_video(config, row, row_num):
     img_args = image_inputs(image_overlays)
     filters = filter_strings(image_overlays, text_overlays)
     output_video = replace_vars(config['output_video'], row)
-    run_ffmpeg(img_args, filters, config['video'], output_video)
+    if 'ffmpeg_path' in config:
+        ffmpeg = config['ffmpeg_path']
+        run_ffmpeg(img_args, filters, config['video'], output_video, executable=ffmpeg)
+    else:
+        run_ffmpeg(img_args, filters, config['video'], output_video)
     return output_video
 
 def filter_strings(images, text_lines):
@@ -116,7 +120,7 @@ def filter_strings(images, text_lines):
         input_stream = output_stream
     return retval
 
-def run_ffmpeg(img_args, filters, input_video, output_video):
+def run_ffmpeg(img_args, filters, input_video, output_video, executable='ffmpeg'):
     """Run the ffmpeg executable for the given input and filter spec.
 
     Arguments:
@@ -125,7 +129,7 @@ def run_ffmpeg(img_args, filters, input_video, output_video):
     input_video -- main input video file name
     output_video -- output video file name
     """
-    args = (['ffmpeg', '-y', '-i', input_video] + img_args +
+    args = ([executable, '-y', '-i', input_video] + img_args +
             ['-filter_complex', ';'.join(filters), output_video])
     subprocess.call(args)
 

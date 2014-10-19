@@ -35,7 +35,6 @@ config_file = ''
 
 @get('/config')
 def get_config():
-    print config_file
     return static_file(config_file, root='./')
 
 @post('/config')
@@ -44,12 +43,12 @@ def post_config():
         json.dump(request.json, f, indent=2)
 
 @get('/')
-def get_config():
+def get_index():
     filename = 'static/index.html'
     return static_file(filename, root='./')
 
 @get('/static/<filepath:path>')
-def get_config(filepath):
+def get_static(filepath):
     return static_file(filepath, root='./static/')
 
 def open_browser(url):
