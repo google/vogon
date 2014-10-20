@@ -31,6 +31,8 @@ import platform
 from bottle import get, post, request, route, run, static_file
 import json
 
+import vogon
+
 config_file = ''
 
 @get('/config')
@@ -41,6 +43,11 @@ def get_config():
 def post_config():
     with open(config_file, 'w') as f:
         json.dump(request.json, f, indent=2)
+
+@get('/preview/<index>')
+def get_preview(index):
+    video = vogon.generate_preview(config_file, int(index))
+    return static_file(video, root='./')
 
 @get('/')
 def get_index():
@@ -65,12 +72,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("config_file", help="Configuration JSON file")
     parser.add_argument("--debug",
-            help="Activate debug mode",
+            help="Enable debug mode",
             action="store_true")
     args = parser.parse_args()
     config_file = args.config_file
-    open_browser('http://localhost:8080/')
-    run(host='localhost', port=8080, debug=args.debug)
+    open_browser('http://127.0.0.1:8080/')
+    run(host='127.0.0.1', port=8080, debug=args.debug)
 
-main()
+if __name__=='__main__':
+    main()
 

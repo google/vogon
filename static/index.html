@@ -62,87 +62,113 @@
 
         <h4>Text</h4>
         <table class="table">
-            <thead><tr>
-            <th class="col-md-1"> Start Time </th>
-            <th class="col-md-1"> End Time </th>
-            <th class="col-md-1"> X </th>
-            <th class="col-md-1"> Y </th>
-            <th class="col-md-2"> Text </th>
-            <th class="col-md-2"> Font </th>
-            <th class="col-md-1"> Font Size </th>
-            <th class="col-md-1"> Font Color </th>
-            <th class="col-md-1">  </th>
-            </tr></thead>
+            <thead>
+                <tr>
+                    <th class="col-md-1"> Start Time </th>
+                    <th class="col-md-1"> End Time </th>
+                    <th class="col-md-1"> X </th>
+                    <th class="col-md-1"> Y </th>
+                    <th class="col-md-2"> Text </th>
+                    <th class="col-md-2"> Font </th>
+                    <th class="col-md-1"> Font Size </th>
+                    <th class="col-md-1"> Font Color </th>
+                    <th class="col-md-1">  </th>
+                </tr>
+            </thead>
             <tbody>
-        <tr ng-repeat="line in config.text_lines">
-            <td class="col-md-1">
-                <input type="text" ng-model="line.start_time" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="text" ng-model="line.end_time" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="text" ng-model="line.x" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="text" ng-model="line.y" class="form-control">
-            </td>
-            <td class="col-md-2">
-                <textarea ng-model="line.text" class="form-control" rows="2"></textarea>
-            </td>
-            <td class="col-md-2">
-                <input type="text" ng-model="line.font" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="text" ng-model="line.font_size" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="text" ng-model="line.font_color" class="form-control">
-            </td>
-            <td class="col-md-1"><input type="button" value="Delete" class="btn-primary" ng-click="delete(config.text_lines, $index)"></td>
-        </tr></tbody></table>
+                <tr ng-repeat="line in config.text_lines">
+                    <td class="col-md-1">
+                        <input type="text" ng-model="line.start_time" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="text" ng-model="line.end_time" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="text" ng-model="line.x" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="text" ng-model="line.y" class="form-control">
+                    </td>
+                    <td class="col-md-2">
+                        <textarea ng-model="line.text" class="form-control" rows="2"></textarea>
+                    </td>
+                    <td class="col-md-2">
+                        <input type="text" ng-model="line.font" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="text" ng-model="line.font_size" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="text" ng-model="line.font_color" class="form-control">
+                    </td>
+                    <td class="col-md-1"><input type="button" value="Delete" class="btn-danger" ng-click="delete(config.text_lines, $index)"></td>
+                </tr>
+            </tbody>
+        </table>
         <div class="row">
-            <div class="col-md-2"><input type="button" value="Add Text" class="btn-primary" ng-click="addText()"></div>
+            <div class="col-md-2"><input type="button" value="Add Text" class="btn-default" ng-click="addText()"></div>
         </div>
 
         <h4>Images</h4>
         <table class="table">
-            <thead><tr>
-            <th class="col-md-1"> Start Time </th>
-            <th class="col-md-1"> End Time </th>
-            <th class="col-md-1"> X </th>
-            <th class="col-md-1"> Y </th>
-            <th class="col-md-2"> Image </th>
-            <th class="col-md-1">  </th>
-            </th></thead>
+            <thead>
+                <tr>
+                    <th class="col-md-1"> Start Time </th>
+                    <th class="col-md-1"> End Time </th>
+                    <th class="col-md-1"> X </th>
+                    <th class="col-md-1"> Y </th>
+                    <th class="col-md-2"> Image </th>
+                    <th class="col-md-1">  </th>
+                </tr>
+            </thead>
             <tbody>
-        <tr ng-repeat="line in config.images">
-            <td class="col-md-1">
-                <input type="number" ng-model="line.start_time" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="number" ng-model="line.end_time" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="number" ng-model="line.x" class="form-control">
-            </td>
-            <td class="col-md-1">
-                <input type="number" ng-model="line.y" class="form-control">
-            </td>
-            <td class="col-md-2">
-                <input type="text" ng-model="line.image" class="form-control">
-            </td>
-            <td class="col-md-1"><input type="button" value="Delete" class="btn-primary" ng-click="delete(config.images, $index)"></td>
-        </tr>
+                <tr ng-repeat="line in config.images">
+                    <td class="col-md-1">
+                        <input type="number" ng-model="line.start_time" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="number" ng-model="line.end_time" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="number" ng-model="line.x" class="form-control">
+                    </td>
+                    <td class="col-md-1">
+                        <input type="number" ng-model="line.y" class="form-control">
+                    </td>
+                    <td class="col-md-2">
+                        <input type="text" ng-model="line.image" class="form-control">
+                    </td>
+                    <td class="col-md-1"><input type="button" value="Delete" class="btn-danger" ng-click="delete(config.images, $index)"></td>
+                </tr>
             </tbody>
         </table>
         <div class="row">
-            <div class="col-md-2"><input type="button" value="Add Image" class="btn-primary" ng-click="addImage()"></div>
+            <div class="col-md-2"><input type="button" value="Add Image" class="btn-default" ng-click="addImage()"></div>
         </div>
         
         <div class="row" style="padding-top:50px;padding-bottom:50px">
             <div class="col-md-2"><input type="button" value="Save" class="btn-primary" style="width:100px" ng-click="saveConfig()"></div>
+            <div class="col-md-2"><input type="button" value="Preview" class="btn-default" style="width:100px" ng-click="preview()"></div>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Preview</h3>
+            </div>
+            <div class="panel-body">
+                <div class="progress" ng-hide="!generatingPreview">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" 
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only"> </span>
+                    </div>
+                </div>
+                <video width="640" height="480" controls id="previewPlayer" onloadeddata="previewLoaded(this)">
+                    <source src="{{previewVideo}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
 
         <textarea id="debugData" style="display:none" ng-model="getConfig()"></textarea>
 

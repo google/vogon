@@ -1,6 +1,10 @@
 
 angular.module('vogonUiApp', [])
   .controller('VogonUiController', ['$scope', '$http', function($scope, $http) {
+
+    $scope.generatingPreview = false;
+    $scope.previewIndex = 1;
+
     $http.get('/config').success(function(data) {
         $scope.config = data;
     });
@@ -9,8 +13,8 @@ angular.module('vogonUiApp', [])
         return angular.toJson($scope.config, true);
     };
 
-    $scope.saveConfig = function() {
-        $http.post('/config', $scope.config);
+    $scope.saveConfig = function(success) {
+        $http.post('/config', $scope.config).success(success);
     };
  
     $scope.addText = function() {
@@ -39,5 +43,29 @@ angular.module('vogonUiApp', [])
     $scope.delete = function(arr, i) {
         arr.splice(i, 1);
     };
+
+    $scope.preview = function() {
+        $scope.generatingPreview = true;
+        $scope.saveConfig(function(data, status, headers, config) {
+            var cacheBust = String(Math.random());
+            //$scope.previewVideo = '/preview/' + $scope.previewIndex + '?' + cacheBust;
+            // I'm not supposed to manipulate the DOM here, but I haven't figured out the idiomatic way to do it yet.
+            var elem = document.getElementById('previewPlayer')
+            elem.src = '/preview/' + $scope.previewIndex + '?' + cacheBust;
+            elem.load();
+        });
+    };
+
+    $scope.previewLoaded = function() {
+        $scope.generatingPreview = false;
+    };
  
 }]);
+
+function previewLoaded(element) {
+    var scope = angular.element(element).scope();
+    scope.previewLoaded();
+    scope.$apply();
+    element.play();
+}
+
