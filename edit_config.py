@@ -23,7 +23,8 @@ default browser, which contains a GUI to edit the JSON configuration file.
 
 from os import path
 import sys
-sys.path.insert(0,path.abspath(path.dirname(__file__)) + '/third_party/bottle/')
+program_dir = path.abspath(path.dirname(__file__))
+sys.path.insert(0, program_dir + '/third_party/bottle/')
 
 import argparse
 import subprocess
@@ -51,12 +52,13 @@ def get_preview(index):
 
 @get('/')
 def get_index():
-    filename = 'static/index.html'
-    return static_file(filename, root='./')
+    filename = 'index.html'
+    return get_static(filename)
 
 @get('/static/<filepath:path>')
 def get_static(filepath):
-    return static_file(filepath, root='./static/')
+    static_dir = program_dir + '/static/'
+    return static_file(filepath, root=static_dir)
 
 def open_browser(url):
     open_command = {
