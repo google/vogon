@@ -82,6 +82,13 @@ def generate_videos(config_file, youtube_upload, preview_line, flags):
         awv_csv = AwvCsv(campaigns, ads)
         awv_csv.write_to_file(awv_csv_file)
 
+def generate_preview(config_file, preview_line):
+    """Generate a single video for preview and return its filename."""
+    config = load_config(config_file)
+    data = read_csv_file(config['data_file'], ',')
+    video = generate_video(config, data[preview_line - 1], preview_line)
+    return video
+
 def generate_video(config, row, row_num):
     row['$id'] = str(row_num)
     image_overlays = replace_vars_in_overlay(config['images'], row)
@@ -89,7 +96,11 @@ def generate_video(config, row, row_num):
     img_args = image_inputs(image_overlays)
     filters = filter_strings(image_overlays, text_overlays)
     output_video = replace_vars(config['output_video'], row)
-    run_ffmpeg(img_args, filters, config['video'], output_video)
+    if 'ffmpeg_path' in config:
+        ffmpeg = config['ffmpeg_path']
+        run_ffmpeg(img_args, filters, config['video'], output_video, executable=ffmpeg)
+    else:
+        run_ffmpeg(img_args, filters, config['video'], output_video)
     return output_video
 
 def filter_strings(images, text_lines):
@@ -116,7 +127,7 @@ def filter_strings(images, text_lines):
         input_stream = output_stream
     return retval
 
-def run_ffmpeg(img_args, filters, input_video, output_video):
+def run_ffmpeg(img_args, filters, input_video, output_video, executable='ffmpeg'):
     """Run the ffmpeg executable for the given input and filter spec.
 
     Arguments:
@@ -125,7 +136,7 @@ def run_ffmpeg(img_args, filters, input_video, output_video):
     input_video -- main input video file name
     output_video -- output video file name
     """
-    args = (['ffmpeg', '-y', '-i', input_video] + img_args +
+    args = ([executable, '-y', '-i', input_video] + img_args +
             ['-filter_complex', ';'.join(filters), output_video])
     subprocess.call(args)
 
