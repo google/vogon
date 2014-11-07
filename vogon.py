@@ -58,6 +58,7 @@ def generate_videos(config_file, youtube_upload, preview_line, flags):
     awv_csv_file = adwords['csv_file']
     campaigns = {}
     ads = {}
+    targets = {}
     data = read_csv_file(config['data_file'], ',')
     if preview_line is not None:
         lines = [[(preview_line - 1), data[preview_line - 1]]]
@@ -77,9 +78,11 @@ def generate_videos(config_file, youtube_upload, preview_line, flags):
                 ad['Campaign'] = campaign['name']
                 ad['Video id'] = video_id
                 ads[ad['name']] = ad
+                target_list = replace_vars_in_targets(adwords['targets'], row)
+                targets[campaign['name']] = target_list
     # Write AdWords CSV
     if youtube_upload:
-        awv_csv = AwvCsv(campaigns, ads)
+        awv_csv = AwvCsv(campaigns, ads, targets)
         awv_csv.write_to_file(awv_csv_file)
 
 def generate_preview(config_file, preview_line):
@@ -122,6 +125,7 @@ def filter_strings(images, text_lines):
             f = text_filter(input_stream, ovr['text'], ovr['font'],
                             ovr['font_size'], ovr['font_color'], ovr['x'],
                             ovr['y'], ovr['start_time'], ovr['end_time'],
+                            ovr.get('angle', None),
                             output_stream)
         retval.append(f)
         input_stream = output_stream
@@ -163,7 +167,7 @@ def image_filter(input_stream, image_stream_index, x, y, t_start, t_end,
             out_str)
 
 def text_filter(input_stream, text, font, font_size, font_color, x, y, t_start,
-                t_end, output_stream):
+                t_end, angle, output_stream):
     """Generate a ffmeg filter specification for a text overlay.
 
     Arguments:
@@ -175,10 +179,13 @@ def text_filter(input_stream, text, font, font_size, font_color, x, y, t_start,
     t_start, t_end -- start and end time of the image's appearance
     output_stream -- name of the output stream
     """
+    out_str = '' if output_stream is None else ('['+output_stream+']')
+    
     # Write the text to a file to avoid the special character escaping mess
     text_file_name = write_to_temp_file(text)
-    out_str = '' if output_stream is None else ('['+output_stream+']')
-    return ('[' + input_stream + '] '
+    
+    if angle is None or angle == '':
+        return ('[' + input_stream + '] '
             'drawtext=fontfile=' + escape_path(font) + ':'
             'textfile=' + escape_path(text_file_name) + ':'
             'fontsize=' + str(font_size) + ':'
@@ -187,6 +194,35 @@ def text_filter(input_stream, text, font, font_size, font_color, x, y, t_start,
             'enable=\'between(t,' + str(t_start) + ','
                 + str(t_end) + ')\' ' +
             out_str)
+    else:
+        # If we have an angle, create an image with the text
+        temp_image_name = write_temp_image(font_color, escape_path(font), str(font_size), text_file_name)
+        
+        # Then drawtext over the image, rotate it, then overlay
+        internal_out_str = 'internal_' + ('' if output_stream is None else (output_stream + '_'))
+        draw_out_str = '[' + internal_out_str + 'd]'
+        rotate_out_str =  '[' + internal_out_str + 'r]'
+        image_in_str = '[' + internal_out_str + 'i]'
+        
+        filters = []
+        filters.append('movie=' + escape_path(temp_image_name) + ' ' + image_in_str)
+        filters.append(image_in_str + ' '
+                'drawtext=fontfile=' + escape_path(font) + ':'
+                'textfile=' + escape_path(text_file_name) + ':'
+                'fontsize=' + str(font_size) + ':'
+                'fontcolor=' + font_color + ':'
+                'x=0:y=0 ' + draw_out_str)
+        
+        filters.append(draw_out_str +
+                ' rotate=' + angle + '*PI/180:ow=\'hypot(iw,ih)\':oh=ow:c=none '
+                + rotate_out_str)
+        
+        filters.append('[' + input_stream + ']' + rotate_out_str +
+                ' overlay=' + str(x) + ':' + str(y) + ':'
+                'enable=\'between(t,' + str(t_start) + ','
+                + str(t_end) + ')\' ' + out_str)
+    
+        return ';'.join(filters)
 
 def write_to_temp_file(text):
     """Write a string to a new temporary file and return its name."""
@@ -195,6 +231,16 @@ def write_to_temp_file(text):
     with os.fdopen(fd, 'w') as f:
         f.write(text.encode('utf8'))
     return text_file_name
+
+def write_temp_image(t_color, t_font, t_size, text_file_name):
+    """Writes a text to a temporary image with transparent background """
+    temp_file_name = tempfile.mktemp(prefix='vogon_', suffix='.gif')
+    
+    args = (['convert', '-background', 'transparent', '-fill', ('\'' + t_color + '\''), '-font', ('\'' + t_font + '\''), '-pointsize', t_size, ('label:@' + text_file_name), escape_path(temp_file_name)])
+    print(args)
+    subprocess.call(args)
+    
+    return temp_file_name
 
 def escape_path(path):
     """Escape Windows path slashes, colons and spaces, adding extra escape for ffmpeg."""
@@ -257,6 +303,13 @@ def replace_vars_in_dict(dic, values):
         else:
             row[c_key] = c_value
     return row
+
+def replace_vars_in_targets(targets, values):
+    """Replace all occurrences of variables in the targets with the values."""
+    retval = []
+    for o in targets:
+        retval.append(replace_vars_in_dict(o, values))
+    return retval
 
 def replace_vars(s, values):
     """Replace all occurrences of variables in the given string with values"""
