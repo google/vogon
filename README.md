@@ -25,6 +25,9 @@ In order to run Vogon, you need to have the following installed first:
   * For Mac and Linux, go to [this page](https://ffmpeg.org/download.html), but **don't click the big green button**. Instead, click on the icon for your OS below it.
   * For Windows, download from [this page](http://ffmpeg.zeranoe.com/builds/), and look for the "32-bit static" build
   * Instructions [here](http://www.wikihow.com/Install-FFmpeg-on-Windows)
+* ImageMagick:
+  * Go to [this page](http://www.imagemagick.org/script/binary-releases.php) and look for the version that is suited to your operational system and follow the instructions.
+  * Make sure the command convert is on your path by typing convert on a terminal window.
 * To make it easier to install the following modules, it's recommended to install PIP: https://pip.pypa.io/en/latest/installing.html 
 * Google API Python client library: https://github.com/google/google-api-python-client
 * Python OAuth2 library (included with google-api-python-client): https://github.com/google/oauth2client

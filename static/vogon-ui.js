@@ -26,7 +26,8 @@ angular.module('vogonUiApp', [])
           text: "",
           font: "",
           font_size: "80",
-          font_color: "#000000"
+          font_color: "#000000",
+          angle: ""
           });
     };
  
@@ -39,6 +40,15 @@ angular.module('vogonUiApp', [])
           image: ""
           });
     };
+    
+    $scope.addTarget = function() {
+        $scope.config.adwords.targets.push({
+           max_cpv: "", 
+           type: "Keyword", 
+           value: "", 
+           level: "Target Group"
+           });
+      };
 
     $scope.delete = function(arr, i) {
         arr.splice(i, 1);
