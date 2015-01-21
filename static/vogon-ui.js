@@ -21,6 +21,7 @@ angular.module('vogonUiApp', [])
       $scope.config.text_lines.push({
           x: "0",
           y: "0",
+          h_align: "left",
           start_time: "0",
           end_time: "0",
           text: "",

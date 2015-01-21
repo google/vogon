@@ -121,7 +121,8 @@ def filter_strings(images, text_lines):
         else:
             f = text_filter(input_stream, ovr['text'], ovr['font'],
                             ovr['font_size'], ovr['font_color'], ovr['x'],
-                            ovr['y'], ovr['start_time'], ovr['end_time'],
+                            ovr['y'], ovr['h_align'], ovr['start_time'],
+                            ovr['end_time'],
                             output_stream)
         retval.append(f)
         input_stream = output_stream
@@ -162,7 +163,7 @@ def image_filter(input_stream, image_stream_index, x, y, t_start, t_end,
                 + str(t_end) + ')\' ' +
             out_str)
 
-def text_filter(input_stream, text, font, font_size, font_color, x, y, t_start,
+def text_filter(input_stream, text, font, font_size, font_color, x, y, h_align, t_start,
                 t_end, output_stream):
     """Generate a ffmeg filter specification for a text overlay.
 
@@ -172,18 +173,20 @@ def text_filter(input_stream, text, font, font_size, font_color, x, y, t_start,
     font -- the file name of the font to be used
     font_size, font_color -- font specifications
     x, y -- position where to overlay the image on the video
+    h_align -- horizontal text alignment ("left" or "center")
     t_start, t_end -- start and end time of the image's appearance
     output_stream -- name of the output stream
     """
     # Write the text to a file to avoid the special character escaping mess
     text_file_name = write_to_temp_file(text)
     out_str = '' if output_stream is None else ('['+output_stream+']')
+    x_expr = str(x) + ('-tw/2' if h_align=='center' else '')
     return ('[' + input_stream + '] '
             'drawtext=fontfile=' + escape_path(font) + ':'
             'textfile=' + escape_path(text_file_name) + ':'
             'fontsize=' + str(font_size) + ':'
             'fontcolor=' + font_color + ':'
-            'x=' + str(x) + ':y=' + str(y) + ':'
+            'x=' + x_expr + ':y=' + str(y) + '-max_glyph_h/2:'
             'enable=\'between(t,' + str(t_start) + ','
                 + str(t_end) + ')\' ' +
             out_str)

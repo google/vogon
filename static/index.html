@@ -68,8 +68,9 @@
                     <th class="col-md-1"> End Time </th>
                     <th class="col-md-1"> X </th>
                     <th class="col-md-1"> Y </th>
+                    <th class="col-md-1"> Alignment </th>
                     <th class="col-md-2"> Text </th>
-                    <th class="col-md-2"> Font </th>
+                    <th class="col-md-1"> Font </th>
                     <th class="col-md-1"> Font Size </th>
                     <th class="col-md-1"> Font Color </th>
                     <th class="col-md-1">  </th>
@@ -89,10 +90,13 @@
                     <td class="col-md-1">
                         <input type="text" ng-model="line.y" class="form-control">
                     </td>
+                    <td class="col-md-1">
+                        <input type="text" ng-model="line.h_align" class="form-control">
+                    </td>
                     <td class="col-md-2">
                         <textarea ng-model="line.text" class="form-control" rows="2"></textarea>
                     </td>
-                    <td class="col-md-2">
+                    <td class="col-md-1">
                         <input type="text" ng-model="line.font" class="form-control">
                     </td>
                     <td class="col-md-1">
