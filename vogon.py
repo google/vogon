@@ -186,43 +186,40 @@ def text_filter(input_stream, text, font, font_size, font_color, x, y, h_align, 
     # Write the text to a file to avoid the special character escaping mess
     text_file_name = write_to_temp_file(text)
 
-    x_expr = str(x) + ('-tw/2' if h_align=='center' else '')
+    if angle is None or angle == '' or angle == '0':
+        x_expr = str(x) + ('-tw/2' if h_align=='center' else '')
+        y_expr = str(y) + '-max_glyph_h/2'
 
-    if angle is None or angle == '':
         return ('[' + input_stream + '] '
             'drawtext=fontfile=' + escape_path(font) + ':'
             'textfile=' + escape_path(text_file_name) + ':'
             'fontsize=' + str(font_size) + ':'
             'fontcolor=' + font_color + ':'
-            'x=' + x_expr + ':y=' + str(y) + '-max_glyph_h/2:'
+            'x=' + x_expr + ':y=' + y_expr + ':'
             'enable=\'between(t,' + str(t_start) + ','
                 + str(t_end) + ')\' ' +
             out_str)
     else:
-        # If we have an angle, create an image with the text
-        temp_image_name = write_temp_image(font_color, escape_path(font), str(font_size), text_file_name)
+        x_expr = str(x) + ('-overlay_w/2' if h_align=='center' else '')
+        y_expr = str(y) + '-overlay_h/2'
 
-        # Then drawtext over the image, rotate it, then overlay
+        # If we have an angle, create an image with the text
+        temp_image_name = write_temp_image(font_color, font, str(font_size), text_file_name)
+
+        # Then rotate it, then overlay
         internal_out_str = 'internal_' + ('' if output_stream is None else (output_stream + '_'))
-        draw_out_str = '[' + internal_out_str + 'd]'
         rotate_out_str =  '[' + internal_out_str + 'r]'
         image_in_str = '[' + internal_out_str + 'i]'
 
         filters = []
         filters.append('movie=' + escape_path(temp_image_name) + ' ' + image_in_str)
-        filters.append(image_in_str + ' '
-                'drawtext=fontfile=' + escape_path(font) + ':'
-                'textfile=' + escape_path(text_file_name) + ':'
-                'fontsize=' + str(font_size) + ':'
-                'fontcolor=' + font_color + ':'
-                'x=0:y=0 ' + draw_out_str)
 
-        filters.append(draw_out_str +
+        filters.append(image_in_str +
                 ' rotate=' + angle + '*PI/180:ow=\'hypot(iw,ih)\':oh=ow:c=none '
                 + rotate_out_str)
 
         filters.append('[' + input_stream + ']' + rotate_out_str +
-                ' overlay=' + str(x) + ':' + str(y) + ':'
+                ' overlay=' + x_expr + ':' + y_expr + ':'
                 'enable=\'between(t,' + str(t_start) + ','
                 + str(t_end) + ')\' ' + out_str)
 
@@ -240,7 +237,7 @@ def write_temp_image(t_color, t_font, t_size, text_file_name):
     """Writes a text to a temporary image with transparent background """
     temp_file_name = tempfile.mktemp(prefix='vogon_', suffix='.gif')
 
-    args = (['convert', '-background', 'transparent', '-fill', ('\'' + t_color + '\''), '-font', ('\'' + t_font + '\''), '-pointsize', t_size, ('label:@' + text_file_name), escape_path(temp_file_name)])
+    args = (['convert', '-background', 'transparent', '-fill', t_color, '-font', t_font, '-pointsize', t_size, ('label:@' + text_file_name), escape_path(temp_file_name)])
     print(args)
     subprocess.call(args)
 
