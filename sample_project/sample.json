@@ -8,8 +8,9 @@
       "end_time": 5, 
       "font_color": "#162938", 
       "y": 500, 
-      "x": "1000", 
-      "font": "/Library/Fonts/Impact.ttf"
+      "x": 1000, 
+      "font": "/Library/Fonts/Impact.ttf",
+      "angle": "-15"
     }, 
     {
       "font_size": 80, 
@@ -20,7 +21,7 @@
       "font_color": "#162938", 
       "y": 500, 
       "x": 1000, 
-      "font": "/Library/Fonts/Impact.ttf"
+      "font": "/Library/Fonts/Impact.ttf",
       "angle": "-15"
     }
   ], 
