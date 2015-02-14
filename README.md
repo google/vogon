@@ -41,7 +41,7 @@ Vogon can upload videos to Youtube using the Youtube API and help you create AdW
   0. In the Console, create a new project with the "Create Project" button
   0. Click "Enable an API" and activate the "Youtube Data V3" API
   0. In "APIs and Auth -> Credentials", create a new Client ID for a installed application
-  0. Download the JSON file with the "Download JSON" button, and save it in the directory where you will run Vogon (together with your configuration, data and image files)
+  0. Download the JSON file with the "Download JSON" button, and save it in the directory where you will run Vogon (together with your configuration, data and image files). This file MUST be renamed to `client_secrets.json` to work.
   0. The account that manages the Youtube channel and the AdWords account must both have Edit access to the project, which can be configured in the "Permissions" section of the Console
 0. The Youtube and AdWords accounts must be linked - [see instructions](https://support.google.com/youtube/answer/3063482)
 
@@ -93,3 +93,25 @@ For example:
     Florianopolis, SC, Brazil (47-1001706)
 
 If the codes are present, the names are not really important, as the system will use the code to look up the location. If the code is absent, the system will try to find the location by name, but this is unreliable and can lead to missing or incorrect locations.
+
+
+#### Using the Config Editor (edit_config.py)
+
+It is possible to edit your .json configuration file using a web-based Config Editor. To do so, use this command in your project:
+
+`python edit_config.py sample_project/sample.json`
+
+This will automatically open your web browser, where you can configure:
+* Output file
+* Video title
+* Video description
+* Data file
+* Path for the FFMPEG application
+* Images (that you can add, edit or remove)
+* Text lines (that you can add, edit or remove)
+
+Then you can PREVIEW or SAVE your changes.
+All the modification will then be saved to your .json configuration file.
+
+To stop the Config Editor, on your terminal just hit
+`CTRL + C`
