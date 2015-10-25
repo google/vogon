@@ -47,7 +47,7 @@ angular.module('vogonUiApp', [])
            max_cpv: "", 
            type: "Keyword", 
            value: "", 
-           level: "Target Group"
+           level: "Ad Group"
            });
       };
 
