@@ -47,7 +47,7 @@ Vogon can upload videos to Youtube using the Youtube API and help you create AdW
 
 ### Configuration
 
-Vogon configuration files are [JSON documents](http://json.org/). Two samples are included with the source, a version for [Unix-like systems](https://github.com/googleads/vogon/blob/master/sample.json) and another for [Windows](https://github.com/googleads/vogon/blob/master/sample_win.json). You can use one of these as a starting point for your project.
+Vogon configuration files are [JSON documents](http://json.org/). Two samples are included with the source, a version for [Unix-like systems](https://github.com/googleads/vogon/blob/master/sample_project/sample.json) and another for [Windows](https://github.com/googleads/vogon/blob/master/sample_project/sample_win.json). You can use one of these as a starting point for your project.
 
 ####Variables
 
