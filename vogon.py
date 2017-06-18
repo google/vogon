@@ -272,7 +272,7 @@ def read_csv_file(file_name, delimiter):
     """
     retval = []
     with open(file_name, 'r') as f:
-        data = csv.reader(f, delimiter=delimiter, quotechar='"')
+        data = csv.reader(f, delimiter=delimiter, quotechar='"', escapechar="\\")
         header_row = data.next()
         header = [unicode(h, 'utf8') for h in header_row]
         for row in data:

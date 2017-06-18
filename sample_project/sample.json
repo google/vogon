@@ -2,73 +2,91 @@
   "text_lines": [
     {
       "font_size": 80, 
+      "angle": "-15", 
       "text": "Compre na\n{{nome}}", 
       "start_time": 3, 
       "h_align": "center", 
       "end_time": 5, 
-      "font_color": "#162938", 
-      "y": 500, 
       "x": 1000, 
-      "font": "/Library/Fonts/Impact.ttf",
-      "angle": "-15"
+      "y": 500, 
+      "font_color": "#162938", 
+      "font": "/Library/Fonts/Impact.ttf"
     }, 
     {
       "font_size": 80, 
+      "angle": "-15", 
       "text": "A partir de {{pre\u00e7o}}", 
       "start_time": 5, 
       "h_align": "center", 
       "end_time": 7, 
-      "font_color": "#162938", 
-      "y": 500, 
       "x": 1000, 
-      "font": "/Library/Fonts/Impact.ttf",
-      "angle": "-15"
+      "y": 500, 
+      "font_color": "#162938", 
+      "font": "/Library/Fonts/Impact.ttf"
     }
   ], 
   "data_file": "sample.csv", 
   "adwords": {
-    "csv_file": "campaigns.csv", 
+    "csv_file": "awfe_campaigns.csv", 
     "ad": {
       "Destination Url": "http://youtube.com/channel/UCvCHMSKUhFoP0mfNxznxuPA", 
       "name": "Video ad {{nome}}", 
-      "Headline": "Listen to Vogon Poetry", 
+      "Headline": "", 
       "Display Url": "youtube.com/channel/UCvCHMSKUhFoP0mfNxznxuPA", 
-      "Showing on": "In-display, In-stream", 
-      "YouTube destination": "Channel", 
-      "Description line one": "The Vogons Write the Best Poetry", 
-      "Description line two": "Daily shows in {{cidade}}", 
-      "Companion banner": "#n/a", 
-      "Thumbnail": "default"
+      "Thumbnail": "default", 
+      "YouTube destination": "", 
+      "Description line one": "", 
+      "Description line two": "", 
+      "Companion banner": "", 
+      "Showing on": "In-stream"
     }, 
     "campaign": {
       "Status": "Paused", 
-      "End date": "#n/a", 
-      "Max CPV": "$0.01", 
-      "Network": "Google Display Network, YouTube Search, YouTube Videos", 
-      "Budget": "1.00", 
+      "End date": "2017-12-30", 
+      "Max CPV": "0.05", 
+      "Network": "YouTube Videos;YouTube Search;Display Network", 
       "Mobile bid modifier": "0%", 
+      "Budget": "1.00", 
       "Ad rotation": "Optimize for views", 
       "Frequency cap": "#n/a", 
-      "Start date": "2014-11-07", 
+      "Start date": "2016-01-01", 
       "Delivery method": "Standard", 
-      "name": "Video campaign {{nome}}"
+      "name": "Vogon v2 sample campaign {{nome}}"
     }, 
     "targets": [
       {
         "type": "Location", 
-        "value": "{{cidade}} {{id_cidade}}", 
+        "value": "{{id_cidade}}", 
         "level": "Campaign"
       }, 
       {
-        "max_cpv": "0.05", 
+        "max_cpv": "", 
         "type": "Keyword", 
         "value": "{{Keywords}}", 
-        "level": "Target Group"
+        "level": "Ad Group"
       }, 
       {
-        "type": "YouTube video", 
+        "type": "Placement", 
         "value": "{{Related_Video}}", 
-        "level": "Target Group"
+        "level": "Ad Group"
+      }, 
+      {
+        "max_cpv": "", 
+        "type": "Audience", 
+        "value": "Avid Investors", 
+        "level": "Ad Group"
+      }, 
+      {
+        "max_cpv": "", 
+        "type": "Topic", 
+        "value": "BMX Bikes", 
+        "level": "Ad Group"
+      }, 
+      {
+        "max_cpv": "", 
+        "type": "Location", 
+        "value": "1014044", 
+        "level": "Campaign"
       }
     ]
   }, 
