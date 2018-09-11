@@ -49,7 +49,7 @@ Vogon can upload videos to Youtube using the Youtube API and help you create AdW
 
 Vogon configuration files are [JSON documents](http://json.org/). Two samples are included with the source, a version for [Unix-like systems](https://github.com/googleads/vogon/blob/master/sample.json) and another for [Windows](https://github.com/googleads/vogon/blob/master/sample_win.json). You can use one of these as a starting point for your project.
 
-####Variables
+#### Variables
 
 In most values, you can use variables to insert values from the input CSV. For example, you can use the location name from the CSV to specify the geo-targeting for the campaigns.
 
