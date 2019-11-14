@@ -1,0 +1,225 @@
+<!--
+Copyright 2019 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="tab-pane active" ng-hide="tabs.video_conf_tab">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2 flex md-truncate>Text Overlays</h2>
+      <md-button class="md-raised md-accent" ng-click="addText()">
+        + Add new
+      </md-button>
+    </div>
+  </md-toolbar>
+  <br/>
+<table class="table">
+    <thead>
+        <tr class="overlay_header">
+            <th> Content </th>
+            <th colspan=2> Time(s)</th>
+            <th colspan=2> Position(px) </th>
+            <th> Disposition </th>
+            <th colspan=3> Font </th>
+            <th class="rm_table"> Remove </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="line in config.text_lines">
+            <td class="input_text separator_table">
+              <md-input-container>
+                <label>text</label>
+                <textarea ng-model="line.text"></textarea>
+              </md-input-container>
+            </td>
+            <td class="input_number two_lines">
+              <md-input-container>
+                  <label>start</label>
+                  <input type="number" ng-model="line.start_time">
+                </md-input-container>
+              <md-input-container>
+                  <label>fade in</label>
+                  <input type="number" ng-model="line.fade_in_duration">
+                </md-input-container>
+            </td>
+            <td class="input_number separator_table two_lines">
+              <md-input-container>
+                <label>end</label>
+                <input type="number" ng-model="line.end_time">
+                </md-input-container>
+              <md-input-container>
+                  <label>fade out</label>
+                  <input type="number" ng-model="line.fade_out_duration">
+                </md-input-container>
+            </td>
+          <td class="input_number">
+              <md-input-container>
+                <label>x</label>
+                <input type="text" ng-model="line.x">
+              </md-input-container>
+            </td>
+            <td class="input_number separator_table">
+              <md-input-container>
+                <label>y</label>
+                <input type="text" ng-model="line.y">
+              </md-input-container>
+            </td>
+            <td class="input_number separator_table two_lines">
+              <md-input-container>
+                <label>rotation</label>
+                <input type="text" ng-model="line.angle">
+              </md-input-container>
+              <md-input-container>
+                <label>alignment</label>
+                <md-select ng-model="line.h_align">
+                  <md-option  value="left">left</md-option>
+                  <md-option  value="center">center</md-option>
+                  <md-option  value="right">right</md-option>
+                </md-select>
+              </md-input-container>
+            </td>
+            <td class="input_text" style="width:250px">
+              <md-input-container>
+                <label>font ttf file</label>
+                <md-select ng-model="line.font">
+                  <md-option ng-repeat="font in fonts"  value="{{font[1]}}">{{font[0]}}</md-option>
+                </md-select>
+              </md-input-container>
+            </td>
+            <td class="input_number">
+              <md-input-container>
+                <label>size</label>
+                <input type="text" ng-model="line.font_size">
+              </md-input-container>
+            </td>
+            <td class="input_number larger">
+              <md-input-container>
+                <label>color</label>
+                <input type="text" ng-model="line.font_color" style="background:{{line.font_color}};color:{{reverse(line.font_color)}}">
+              </md-input-container>
+            </td>
+            <td class="remove_btn">
+              <md-button class="md-warn thin" ng-click="delete(config.text_lines, $index)">
+                Delete
+              </md-button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<br />
+<md-toolbar>
+  <div class="md-toolbar-tools">
+    <h2 flex md-truncate>Image/Video Overlays</h2>
+    <md-button class="md-raised md-accent" ng-click="addImage()">
+      + Add new
+    </md-button>
+  </div>
+</md-toolbar>
+<br/>
+<table class="table">
+    <thead>
+        <tr class="overlay_header">
+            <th> Image/Video </th>
+            <th colspan=2> Time(s) </th>
+            <th colspan=2> Position(px) </th>
+            <th> Disposition </th>
+            <th class="rm_table"> Remove </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="line in config.images">
+            <td class="input_text separator_table">
+              <md-input-container>
+                <label>image/video file</label>
+                <input type="text" ng-model="line.image">
+                </md-input-container>
+            </td>
+            <td class="input_number two_lines">
+              <md-input-container>
+                  <label>start</label>
+                  <input type="number" ng-model="line.start_time">
+                </md-input-container>
+              <md-input-container>
+                  <label>fade in</label>
+                  <input type="number" ng-model="line.fade_in_duration">
+                </md-input-container>
+            </td>
+            <td class="input_number separator_table two_lines">
+              <md-input-container>
+                <label>end</label>
+                <input type="number" ng-model="line.end_time">
+                </md-input-container>
+              <md-input-container>
+                  <label>fade out</label>
+                  <input type="number" ng-model="line.fade_out_duration">
+                </md-input-container>
+            </td>
+            <td class="input_number two_lines">
+              <md-input-container>
+                <label>x</label>
+                <input type="number" ng-model="line.x">
+              </md-input-container>
+              <md-input-container>
+                <label>width</label>
+                <input type="number" ng-model="line.width">
+              </md-input-container>
+            </td>
+            <td class="input_number separator_table two_lines">
+              <md-input-container>
+                <label>y</label>
+                <input type="number" ng-model="line.y">
+                </md-input-container>
+              <md-input-container>
+                <label>height</label>
+                <input type="number" ng-model="line.height">
+              </md-input-container>
+            </td>
+          <td class="input_number separator_table two_lines">
+              <md-input-container>
+                <label>rotation</label>
+                <input type="number" ng-model="line.angle">
+                </md-input-container>
+            <md-input-container>
+                <label>alignment</label>
+                <md-select ng-model="line.h_align">
+                  <md-option  value="left">left</md-option>
+                  <md-option  value="center">center</md-option>
+                  <md-option  value="right">right</md-option>
+                </md-select>
+              </md-input-container>
+            </td>
+            <td class="remove_btn">
+              <md-button class="md-warn thin" ng-click="delete(config.images, $index)">
+                Delete
+              </md-button>
+          </td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+<div ng-if="video_generation">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2 flex md-truncate>Video Generation Status</h2>
+    </div>
+  </md-toolbar>
+  <br />
+  <p>
+    <b>Latest generation started at:</b> {{video_generation.started_at}}<br/>
+    <b>Latest generation status is: </b> {{video_generation.current_state}}
+    </p>
+  <br/>
+  </div>
+</div>

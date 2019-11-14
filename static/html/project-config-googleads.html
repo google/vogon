@@ -1,0 +1,202 @@
+<!--
+Copyright 2019 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="tab-pane" ng-hide="tabs.adw_conf_tab" layout="column">
+  <div layout="column">
+    <md-input-container>
+       <label>Google Ads Editor CSV file name</label>
+          <input type="text" ng-model="config.adwords.csv_file" disabled>
+      </md-input-container>
+    <md-toolbar flex>
+      <div class="md-toolbar-tools">
+        <h2 flex md-truncate>Targeting</h2>
+      <md-button class="md-raised md-accent" ng-click="addTarget()">
+        + Add new
+      </md-button>
+      </div>
+    </md-toolbar>
+    <br />
+    <table class="table">
+        <thead>
+            <tr class="overlay_header">
+                <th> Type </th>
+                <th> Value </th>
+                <th> Level </th>
+                <th> Max CPV </th>
+                <th class="rm_table"> Remove </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="line in config.adwords.targets">
+                <td class="target_td">
+                  <md-input-container>
+                    <label>Targeting Type</label>
+                    <md-select ng-model="line.type" aria-label="Targeting type">
+                      <md-option value="Keyword">Keyword (AdGroup)</md-option>
+                      <md-option value="Placement">Placement (AdGroup)</md-option>
+                      <md-option value="Audience">Audience - Affinity/In-market (AdGroup)</md-option>
+                      <md-option value="Topic">Topic - Placement (AdGroup)</md-option>
+                      <md-option value="Age">Age (AdGroup)</md-option>
+                      <md-option value="Gender">Gender (AdGroup)</md-option>
+                      <md-option value="Location">Location (Campaign)</md-option>
+                      <md-option value="Ad Schedule">Ad Schedule (Campaign)</md-option>
+                    </md-select>
+                  </md-input-container>
+                </td>
+                <td class="target_td">
+                  <md-input-container>
+                    <label>Target Value</label>
+                    <input type="text" ng-model="line.value" class="form-control">
+                  </md-input-container>
+                </td>
+                <td class="target_td">
+                  <md-input-container>
+                    <label>Target Level</label>
+                    <md-select ng-model="line.level">
+                      <md-option value="Ad Group">Ad Group</md-option>
+                      <md-option value="Campaign">Campaign</md-option>
+                    </md-select>
+                  </md-input-container>
+                </td>
+                <td class="target_td">
+                  <md-input-container>
+                    <label>Max. CPV/CPM</label>
+                     <md-tooltip>
+                      If the campaign type is Bumper, this is the Max CPM value.
+                      If it is TrueView, this is the Max CPV value. This is only
+                      used for Ad Group level targets. For Campaign level
+                      targets, the campaign Max Bid is used instead.
+                    </md-tooltip>
+                    <input aria-label="Max CPM or CPV" type="text" ng-model="line.max_cpv">
+                  </md-input-container>
+                </td>
+                <td class="remove_btn">
+                  <md-button class="md-warn thin" ng-click="delete(config.adwords.targets, $index)">
+                    Delete
+                  </md-button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+  <br />
+  <br />
+  <div layout="column" flex>
+      <md-toolbar flex>
+        <div class="md-toolbar-tools">
+          <h2 flex md-truncate>Account Info</h2>
+        </div>
+      </md-toolbar>
+      <br />
+      <md-input-container flex>
+          <label>Account ID</label>
+          <input type="text" class="form-control" ng-model="config.adwords['Account']">
+      </md-input-container>
+    </div>
+  <div layout="row"       layout-align="start start">
+    <div layout="column" flex>
+      <md-toolbar flex>
+        <div class="md-toolbar-tools">
+          <h2 flex md-truncate>Campaign Info</h2>
+        </div>
+      </md-toolbar>
+      <br />
+      <md-input-container flex>
+        <label>Campaign Name</label>
+        <input type="text" ng-model="config.adwords.campaign['name']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Campaign Type</label>
+        <md-select type="text" ng-model="config.adwords.campaign['Campaign Type']">
+          <md-option value='Video - Bumper ad'>Bumper (CPM)</md-option>
+          <md-option value='Video'>TrueView (CPV)</md-option>
+        </md-select>
+      </md-input-container>
+      <md-input-container flex>
+        <label>Initial Status</label>
+        <input type="text" ng-model="config.adwords.campaign['Status']">
+      </md-input-container>
+      <md-input-container flex>
+        <md-tooltip>(YYYY-MM-DD)</md-tooltip>
+        <label>Start date</label>
+        <input  type="text" ng-model="config.adwords.campaign['Start date']">
+      </md-input-container>
+      <md-input-container flex>
+        <md-tooltip>(YYYY-MM-DD)</md-tooltip>
+        <label>End date</label>
+        <input type="text" ng-model="config.adwords.campaign['End date']">
+      </md-input-container>
+      <md-input-container>
+        <label>Max Bid</label>
+        <input type="text" ng-model="config.adwords.campaign['Max CPV']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Daily Budget</label>
+        <input type="text" ng-model="config.adwords.campaign['Budget']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Mobile bid modifier</label>
+        <input type="text" ng-model="config.adwords.campaign['Mobile bid modifier']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Delivery method</label>
+        <input type="text" ng-model="config.adwords.campaign['Delivery method']">
+      </md-input-container>
+      <md-input-container flex>
+        <md-tooltip>
+          Valid values are "YouTube Videos", "YouTube Search" and
+          "Video Partners". You can choose several, joined by
+          semicolons (";") like in example: "Video Partners;YouTube Search; YOutube Videos".
+        </md-tooltip>
+        <label>Delivery Networks</label>
+        <input type="text" ng-model="config.adwords.campaign['Network']">
+      </md-input-container>
+    </div>
+    <div layout="column" flex>
+      <md-toolbar class="md-accent" flex>
+        <div class="md-toolbar-tools">
+          <h2 flex md-truncate>Ad/AdGroup Info</h2>
+        </div>
+      </md-toolbar>
+            <br />
+      <md-input-container flex>
+        <label>Ad Group Name</label>
+        <input type="text" ng-model="config.adwords.campaign['Ad Group name']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Ad Name</label>
+        <input type="text" ng-model="config.adwords.ad['name']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Ad Display Url</label>
+        <input type="text" ng-model="config.adwords.ad['Display Url']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Ad Final URL</label>
+        <input type="text" ng-model="config.adwords.ad['Final Url']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Ad Mobile Final URL</label>
+        <input type="text" ng-model="config.adwords.ad['Mobile Final Url']">
+      </md-input-container>
+      <md-input-container flex>
+        <label>Ad Tracking Template</label>
+        <input type="text" ng-model="config.adwords.ad['Tracking Template']">
+      </md-input-container>
+   </div>
+  </div>
+  {{csv_download_message}}
+</div>

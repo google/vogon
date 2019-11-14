@@ -1,0 +1,237 @@
+/*
+Copyright 2019 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+html,body,md-content{
+  background: #eaeaea;
+}
+
+.project_list{
+  margin-top: 80px;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+}
+ul.projects_table{
+  margin:0px;
+  padding:0px;
+}
+.projects_table li{
+    border: 1px solid lightgrey;
+    list-style: none;
+    padding: 10px;
+    margin: 5px;
+    color: black;
+    overflow: hidden;
+}
+.project_title{
+    font-size: 16px;
+    text-align: left;
+    margin: 26px 0px 0px 19px;
+}
+.list_header{
+  font-weight:bold;
+}
+md-content{
+  margin-top: 42px;
+}
+.md-nav-bar{
+  margin-left: 155px;
+}
+
+iframe{
+  border: 1px dashed red;
+  box-shadow: 0px 0px 10px grey;
+  border-radius: 10px;
+}
+
+#logo{
+  width: 146px;
+  position: fixed;
+  top: 0;
+  left: 36px;
+  z-index: 1000;
+  background: white;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0px 0px 3px lightgrey;
+  text-align: center;
+  opacity: 0.8;
+}
+#logo img{
+  width:100px;
+}
+.overlay_header th{
+  border-bottom: 1px solid lightgrey;
+  border-right: 1px solid lightgrey;
+}
+.separator_table{
+  border-right: 1px solid lightgrey;
+}
+
+table{
+  width:100%;
+}
+.overlay_header th:last-child{
+  border-right: none;
+}
+md-button .thin{
+  margin: 0px;
+}
+
+td.input_number{
+  vertical-align: top;
+  width: 60px;
+}
+td.target_td{
+  vertical-align: bottom !important;
+}
+td.target_td .md-errors-spacer{
+  height:0px;
+  display:none;
+}
+
+td.input_number input,td.input_number label{
+  text-align: left;
+}
+td.input_number.larger{
+  width: 85px
+}
+
+td.input_text{
+  vertical-align: top;
+  width: 350px
+}
+td.input_text md-input-container{
+  width: 100%;
+}
+td.remove_btn{
+  padding: 8px 0;
+  vertical-align: top;
+  text-align: left;
+}
+
+th.rm_table{
+  text-align: left;
+  padding-left: 22px;
+}
+
+.tab-pane{
+  padding: 20px;
+  background-color: white;
+}
+.tab-content{
+  background-color: white;
+  margin-top: 3px;
+}
+
+.preview{
+    width: 90%;
+    max-width: 1280px;
+    height: auto;
+    box-shadow: 0px 3px 9px 6px #8c8c8c;
+    border: 25px solid #313131;
+    border-radius: 16px;
+    margin-top: 15px;
+}
+
+.target_td md-input-container{
+  margin: 0px;
+  border-right: 1px solid lightgray;
+  width: 100%;
+}
+
+
+md-tooltip .md-content {
+    height: auto;
+    background-color: rgba(0,0,0,0.95) !important;
+    font-size: 12px;
+}
+
+.switch-label {
+    font-size: 11px;
+    color: rgba(0,0,0,0.54) !important;
+    top: -35px;
+    text-align: center;
+}
+
+.animated {
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+}
+
+.fade.ng-enter {
+  transition: 0.5s linear all;
+  opacity: 0;
+}
+
+.fade.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+.assets .asset_path {
+  padding: 0px 28px;
+  position: absolute;
+  top: 9px;
+  left: -10px;
+  font-size: 13px;
+  color: grey;
+}
+
+.assets .asset_icon {
+  position: absolute;
+  top: 5px;
+  left: -9px;
+}
+
+.assets .asset_trash {
+  position: absolute;
+  top: 5px;
+  right: -11px;
+}
+
+.assets .asset_download {
+  position: absolute;
+  top: 5px;
+  right: 11px;
+}
+
+.assets .asset_holder {
+  position: relative;
+  margin-top: -20px;
+}
+
+.assets .asset_card {
+  margin: 5px;
+}
+
+.asset_upload_message {
+  color: grey;13px
+  font-size: 13px;
+  font-style: italic;
+  padding-top: 16px;
+}
+
+
+.two_lines md-input-container .md-errors-spacer {
+    float: right;
+    min-height: 0;
+    min-width: 0;
+}
+.two_lines{
+
+}
+
+table tr:nth-child(even) td{
+  background-color:whitesmoke;
+}
