@@ -1,0 +1,60 @@
+<!--
+Copyright 2019 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="tab-pane" ng-hide="tabs.youtube_conf_tab" layout="column">
+  <md-toolbar flex>
+    <div class="md-toolbar-tools">
+      <h2 flex md-truncate>YouTube uploaded videos should have:</h2>
+    </div>
+  </md-toolbar>
+  <br />
+  <md-input-container flex>
+    <label>Title</label>
+    <input type="text" ng-model="config.video_title">
+  </md-input-container>
+  <md-input-container flex>
+    <label>Description</label>
+    <input type="text" ng-model="config.video_description">
+  </md-input-container>
+  <md-input-container flex>
+    <label>Linked YT Channel</label>
+    <input type="text" ng-model="youtube_channel.snippet.title" readonly>
+  </md-input-container>
+  <div id="authorization" ng-show="youtube_auth.device_code" ng-if="youtube_channel_auth_box">
+    <md-toolbar flex>
+      <div class="md-toolbar-tools">
+        <h2 flex md-truncate>YouTube authorizaton process</h2>
+      </div>
+    </md-toolbar>
+    <h4>To authorize this device access the link: <a target="_blank" href="{{youtube_auth.verification_url}}">{{youtube_auth.verification_url}}</a> and input the code: {{youtube_auth.user_code}}</h4>
+    <md-button  class="md-raised md-primary" ng-click="check_authorized_device()">
+      Check device authorization
+    </md-button>
+  </div>
+  <div>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 flex md-truncate>Video Upload Status</h2>
+      </div>
+    </md-toolbar>
+    <br />
+    <p>
+      <b>Latest upload status is: </b> {{video_upload.current_state}}
+      </p>
+    <br/>
+    </div>
+  </div>
+</div>

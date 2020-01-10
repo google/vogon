@@ -1,0 +1,57 @@
+<!--
+Copyright 2019 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Vogon4A</title>
+    <link rel="shortcut icon" type="image/png" href="/static/img/logo.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google apis -->
+    <script src="https://apis.google.com/js/client.js"></script>
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-resource.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-sanitize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-cookies.min.js"></script>
+
+
+    <!-- AngularJs Material -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+
+    <!-- Vogon -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="/static/js/app-config.js"></script>
+    <script src="/static/js/services/sheets-api-service.js"></script>
+    <script src="/static/js/services/youtube-api-service.js"></script>
+    <script src="/static/js/services/ng-file-upload.js"></script>
+    <script src="/static/js/services/assets-resource.js"></script>
+    <script src="/static/js/controllers/project-list-controller.js"></script>
+    <script src="/static/js/controllers/project-controller.js"></script>
+
+
+  </head>
+  <body ng-app="vogonUiApp" ng-cloak>
+    <a href="/" id="logo"><img src="/static/img/logo.png" /></a>
+      <div ng-view></div>
+  </body>
+</html>

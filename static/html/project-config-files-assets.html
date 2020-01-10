@@ -1,0 +1,53 @@
+<!--
+Copyright 2019 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<md-toolbar>
+  <div class="md-toolbar-tools md-accent">
+    <h2 flex md-truncate>Project Assets</h2>
+    <md-button class="md-raised md-accent"
+      ngf-select ng-multiple="true"
+      ngf-change="upload_single_asset($files)"
+      ng-model="files">
+      + Add new
+  </md-button>
+  </div>
+</md-toolbar>
+<div flex="100" layout="row" >
+    <div class="asset_upload_message">{{asset_upload_message}}</div>
+</div>
+<div layout="row">
+  <div class="assets animated fade" flex layout="row" layout-wrap  style="background: #d8d8d8;padding: 10px;">
+  <div flex="100" layout="row" layout-align="center center">
+  <md-input-container class="md-icon-float" flex="33" style="margin-bottom: -15px;">
+    <!-- Use floating label instead of placeholder -->
+    <label>Search Asset</label>
+    <md-icon class="md-primary" md-font-set="material-icons">search</md-icon>
+    <input ng-model="assetSearch" type="text">
+  </md-input-container>
+  </div>
+  <div flex="25" ng-repeat="asset in assets | filter:assetSearch">
+    <md-card flex="100" class="asset_card">
+      <md-card-title>
+        <div flex="100" layout="row" class="asset_holder">
+          <md-icon class="asset_icon" md-font-set="material-icons">{{asset.icon}}</md-icon>
+          <div class="asset_path force-break-text"> {{asset.name}} </div>
+          <md-icon class="asset_download" ng-click="downloadAsset(asset.path)" md-font-set="material-icons">file_download</md-icon>
+          <md-icon class="md-primary asset_trash" ng-click="removeAsset(asset.path)" md-font-set="material-icons">delete</md-icon>
+        </div>
+      </md-card-title>
+    </md-card>
+    </div>
+  </div>
+</div>

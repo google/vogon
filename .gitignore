@@ -1,3 +1,8 @@
 *.pyc
 *-oauth2.json
 .DS_Store
+projects/
+tmp/
+log/
+credentials/*.json
+**/.DS_Store

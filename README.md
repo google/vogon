@@ -1,95 +1,183 @@
-## Vogon: scalable customization of video campaigns
+# Vogon
 
-Vogon combines a video creative, a data table and a layout specification,
+Vogon combines a video creative, a data table(Feed) and a layout specification,
 generating a copy of the video creative combined with each line of the data
 table according to the layout specification.
 
-The data can contain text and images. The specification determines the timing,
-position and font definitions for each piece of text and image, referencing
-data fields through their names. Fixed text can also be used in the layout
-specification.
+The data can contain text, images and videos. The specification determines the timing,
+position and font definitions for each piece of text, video and image,
+referencing data fields through their names. Fixed text can also be
+used in the layout specification.
 
-The generated videos are (optionally) uploaded to a Youtube channel, and a 
-campaign specification file is generated to be imported in AdWords for Video,
-creating geo-targeted campaigns for each of the videos.
+The generated videos are (optionally) uploaded to a Youtube channel,
+and a Google Ads Campaign specification file is generated to be imported in Google Ads
+for Video, creating keyword/audeince/interest/geo-targeted campaigns for each of the videos.
 
 This is not an official Google product.
 
-### Dependencies
+This tutorial will help you get Vogon up and running on your own infrastructure.
 
-In order to run Vogon, you need to have the following installed first:
+It goes as follows:
 
-* Python 2.7.x (not 3.X): https://www.python.org/download/
-  * For Windows: on the second step of the wizard, check the "Add python.exe to Path" option
-* FFmpeg:
-  * For Mac and Linux, go to [this page](https://ffmpeg.org/download.html), but **don't click the big green button**. Instead, click on the icon for your OS below it.
-  * For Windows, download from [this page](http://ffmpeg.zeranoe.com/builds/), and look for the "32-bit static" build
-  * Instructions [here](http://www.wikihow.com/Install-FFmpeg-on-Windows)
-* ImageMagick:
-  * This package is optional, and only used if you need to render text at an angle
-  * Go to [this page](http://www.imagemagick.org/script/binary-releases.php) and look for the version that is suited to your operating system and follow the instructions.
-  * Make sure the command `convert` is on your path by typing `convert` on a terminal window.
-* To make it easier to install the following modules, it's recommended to install PIP: https://pip.pypa.io/en/latest/installing.html 
-* Google API Python client library: https://github.com/google/google-api-python-client
-* Python OAuth2 library (included with google-api-python-client): https://github.com/google/oauth2client
+* 1 - Installing the Solution
+* 2 - Accessing the Web-App
+* 3 - User Manual
 
-### Preparation
+## 1 - Installing the Solution
 
-Vogon can upload videos to Youtube using the Youtube API and help you create AdWords for Video campaigns. In order to do that, you need to complete the steps below.
+We have main steps here:
 
-0. Create a project in the [Google Developers Console](https://console.developers.google.com/project)
-  0. In the Console, create a new project with the "Create Project" button
-  0. Click "Enable an API" and activate the "Youtube Data V3" API
-  0. In "APIs and Auth -> Credentials", create a new Client ID for a installed application
-  0. Download the JSON file with the "Download JSON" button, and save it in the directory where you will run Vogon (together with your configuration, data and image files)
-  0. The account that manages the Youtube channel and the AdWords account must both have Edit access to the project, which can be configured in the "Permissions" section of the Console
-0. The Youtube and AdWords accounts must be linked - [see instructions](https://support.google.com/youtube/answer/3063482)
+0. Install Vogon
+0. Get APIs Access
 
-### Configuration
+**Installation** should cover following packages:
 
-Vogon configuration files are [JSON documents](http://json.org/). Two samples are included with the source, a version for [Unix-like systems](https://github.com/googleads/vogon/blob/master/sample.json) and another for [Windows](https://github.com/googleads/vogon/blob/master/sample_win.json). You can use one of these as a starting point for your project.
+* Install ffmpeg and imagemagick
+* install GIT
+* Install Python3 and pip3
+* install Python libs with pip
+  * google-api-python-client
+  * oauth2client
+  * bottle
+  * http.client
+  * httplib2
+* Download Vogon code
 
-####Variables
+**APIS** should be:
+* YouTube Data API V3
+* Google SHEETS
 
-In most values, you can use variables to insert values from the input CSV. For example, you can use the location name from the CSV to specify the geo-targeting for the campaigns.
+### 1.1 - Installing Vogon
+We got two flavors here:
 
-The syntax for variables is `{{column name}}`, where "column name" is the name in the CSV header. For example, if your CSV looks like this:
+* Linux (Debian/Ubuntu)
+* Mac OS X
+
+But have fun installing where ever you may seen fit :)
+
+#### 1.1.1 - Linux install (Debian/Ubuntu)
+Depending on the distro, the set of commands to install all required
+dependencies shall look like this:
+
+```bash
+# install  ffmpeg * imagemagik
+sudo apt-get install ffmpeg;
+sudo apt-get install imagemagick;
+
+# install GIT
+sudo apt-get install git;
+
+# install python3 and pip3
+sudo apt-get -y install python3-pip;
+
+# install python libs
+pip3 install --upgrade google-api-python-client;
+pip3 install --upgrade oauth2client;
+pip3 install --upgrade bottle;
+pip3 install --upgrade retry;
+pip3 install --upgrade http.client;
+pip3 install --upgrade httplib2;
+
+# Download Vogon code
+cd {YOUR_VOGON_APP_DIR};
+git clone https://github.com/google/vogon.git
+```
 
 
-City | Price
----- | -----
-São Paulo | 48.900,00
-Curitiba | 49.900,00
+#### 1.1.2 - Mac OS X Install
+Depending on the OS X version, the set of commands to install all required
+dependencies shall look like this:
 
-You can configure geo-targeting like this:
+```bash
+# install home brew
+xcode-select --install
+sudo easy_install pip
+sudo pip install --upgrade pip
+ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
 
-`"Location": "{{city}}"`
+# install  ffmpeg * imagemagik
+brew install ffmpeg;
+brew install imagemagick;
 
-Column names are case-insensitive (e.g. "City" and "city" both work).
+# install GIT
+brew install git;
 
-Vogon pre-defines some special variables that don't come from the CSV:
+# install python3 and pip3
+brew install python
+brew install python3
 
-`{{$id}}`: a sequential line number of the record in the CSV file (starting at 1, after the header). It can be useful to generate video files with unique names, for example.
+# install python libs
+pip3 install --upgrade google-api-python-client;
+pip3 install --upgrade oauth2client;
+pip3 install --upgrade bottle;
+pip3 install --upgrade retry;
+pip3 install --upgrade http.client;
+pip3 install --upgrade httplib2;
 
-`{{$video_id}}`: After a video is uploaded to YouTube, this is the video ID. It can be used for linking to the video. The "Video Id" ad attribute in the output CSV is automatically set to this value.
+# Download Vogon code
+cd {YOUR_VOGON_APP_DIR};
+git clone https://github.com/google/vogon.git
+```
 
-#### Importing the Campaigns
+### 1.2 - Get API Access
+Vogon uses two main APIs to run smoothly:
 
-Vogon will generate a CSV file that can be imported into AdWords for Video, containing all the new campaigns, ads and targeting for the generated videos. This file can be modified with a text editor or spreadsheet application (like LibreOffice or Excel), if necessary, or imported as is.
+* YouTube API: upload generated videos to YouTube.
+* Google Sheets: Manipulate Vogon on a web interface.
 
-If you want to insert ads into existing campaigns, you'll need to obtain the campaign ID. To do that, click the "Bulk Upload" button, choose the "Only Data" option and click "Download". The generated file will contain the campaign ID numbers.
+#### 1.2.1 - YouTube DATA V3 API
+This API is used to upload Videos generated by Vogon to Youtube, making it possible
+to run ads on them.
 
-#### Reference
+0. Enable YouTube DATA V3 API API
+   0. Go to the [YT data API Console](https:/console.developers.google.com/apis/library/youtube.googleapis.com)
+     and enable the api.
+   0. Visit the [Enabled APIs page](https://console.developers.google.com/apis/enabled).
+     In the list of APIs, make sure the status is ON for the YouTube Data API v3.
+0. Create a "SERVER client secret"
+   [create oAuth client type OTHER](https://console.developers.google.com/apis/credentials/oauthclient/)
+0. Download "SERVER client secret" json file
+0. Move downloaded file to app credentials folder as **"webserver_client_secret.json"**.
+0. If you intend to upload more than 3 videos a day to YouTube, you should request more quota for YouTube API v3. Each vogon upload costs around 1600 quotas, as fo data of publication of this readme file.
 
-AdWords for Video bulk upload documentation: https://support.google.com/youtube/answer/3344649
 
-#### Location Codes
+#### 1.2.1 - Google Sheets API
+This API is used to read and update Vogon feed.
 
-Location names need to be followed by their codes, which can be looked up in this page: https://developers.google.com/adwords/api/docs/appendix/geotargeting. The prefix "47-" needs to be added to the code that you look up from the page.
+0. Enable Google SHeets API
+   0. Go to the [Sheets API Console](https:/console.developers.google.com/apis/library/sheets.googleapis.com)
+     and enable the api.
+   0. Visit the [Enabled APIs page](https://console.developers.google.com/apis/enabled).
+     In the list of APIs, make sure the status is ON for the Sheets API.
+0. Create an "WEB APPLICATION secret":
+   [create oAuth client of type WEB_APPLICATION](https://console.developers.google.com/apis/credentials/oauthclient/)
+0. Download "WEB_APPLICATION client" json file
+0. Move downloaded file to app credentials folder as **"oauth_2_client_secret.json"**
 
-For example:
+#### 1.2.3 - When you are done...
 
-    São Paulo, Brazil  (47-20106)
-    Florianopolis, SC, Brazil (47-1001706)
+Your app credentials folder  should look something like this
 
-If the codes are present, the names are not really important, as the system will use the code to look up the location. If the code is absent, the system will try to find the location by name, but this is unreliable and can lead to missing or incorrect locations.
+* .git
+* base_project
+   * ...
+* credentials
+   * .keep
+   * **webserver_client_secret.json**
+   * **oauth_2_client_secret.json**
+* ...
+
+
+## 2 - Accessing the Web-App
+
+* Start the web app (Make sure port 8080 is free)
+
+```bash
+cd {YOUR_VOGON_APP_DIR};
+python server.py --debug
+```
+
+* Open solution on a browser: [http://localhost:8080](http://localhost:8080)
+
+## 3 - User Manual
+Check [User Manual  PDF](User Manual.pdf) :)
