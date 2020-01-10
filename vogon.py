@@ -54,12 +54,12 @@ running_gen_threads = {}
 
 def stop_video_generation(project_dir):
   global stop_gen_threads, running_gen_threads
-  print("cancelling video genration for %s"%project_dir)
+  print("cancelling video generation for %s"%project_dir)
   stop_gen_threads[project_dir] = True
   while True:
     if project_dir not in running_gen_threads or len(running_gen_threads[project_dir]) == 0:
       stop_gen_threads[project_dir] = False
-      print("cancelled video genration for %s"%project_dir)
+      print("cancelled video generation for %s"%project_dir)
       break
     else:
       time.sleep(1)
@@ -258,7 +258,7 @@ def filter_strings(images, text_lines):
   return complex_filters, txt_input_files
 
 def run_ffmpeg(img_args, filters, input_video, output_video, executable='ffmpeg'):
-    """Run the ffmpeg executable for the given input an1d filter spec.
+    """Run the ffmpeg executable for the given input and filter spec.
 
     Arguments:
     img_args -- a list of '-i' input arguments for the images

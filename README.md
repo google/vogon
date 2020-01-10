@@ -41,7 +41,7 @@ We have main steps here:
   * bottle
   * http.client
   * httplib2
-* Download Vogon codeAfter tht
+* Download Vogon code
 
 **APIS** should be:
 * YouTube Data API V3
