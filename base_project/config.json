@@ -8,6 +8,7 @@
       "end_time": 15,
       "text": "Ol\u00e1, {{texto_nome_local}}!",
       "font": "projects/hiro/assets/Rye-Regular.ttf",
+      "is_cropped_text": false,
       "font_size": "20",
       "font_color": "#0FAAF0",
       "angle": "0",
