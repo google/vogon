@@ -201,6 +201,7 @@ app.controller('ProjectController',
           end_time: "0",
           text: "",
           font: "",
+          is_cropped_text: false,
           font_size: "80",
           font_color: "#000000",
           angle: ""
