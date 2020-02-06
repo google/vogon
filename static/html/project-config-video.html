@@ -89,11 +89,18 @@ limitations under the License.
                 </md-select>
               </md-input-container>
             </td>
-            <td class="input_text" style="width:250px">
+            <td class="input_text two_lines" style="width:250px">
               <md-input-container>
                 <label>font ttf file</label>
                 <md-select ng-model="line.font">
                   <md-option ng-repeat="font in fonts"  value="{{font[1]}}">{{font[0]}}</md-option>
+                </md-select>
+              </md-input-container>
+              <md-input-container>
+                <label>is text cropped?</label>
+                <md-select ng-model="line.is_cropped_text">
+                  <md-option value="false">No</md-option>
+                  <md-option value="true">Yes</md-option>
                 </md-select>
               </md-input-container>
             </td>

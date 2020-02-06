@@ -250,6 +250,7 @@ def filter_strings(images, text_lines):
                                      float(ovr['fade_in_duration']),
                                      float(ovr['fade_out_duration']),
                                      ovr.get('angle', None),
+                                     ovr.get('is_cropped_text', False),
                                      output_stream)
       txt_input_files.append(i_file)
 
@@ -499,6 +500,7 @@ def text_filter(input_stream,
                 t_start, t_end,
                 fade_in_duration, fade_out_duration,
                 angle,
+                is_cropped_text,
                 output_stream):
     """Generate a ffmeg filter specification for a text overlay.
 
@@ -520,7 +522,8 @@ def text_filter(input_stream,
     temp_image_name = write_temp_image(font_color,
                                        font,
                                        str(font_size),
-                                       text_file_name)
+                                       text_file_name,
+                                       is_cropped_text)
     filters = image_and_video_filter(
       input_stream=input_stream,
       image_stream_index=image_stream_index,
@@ -556,7 +559,7 @@ def write_to_temp_file(text):
         f.close()
     return text_file_name
 
-def write_temp_image(t_color, t_font, t_size, text_file_name):
+def write_temp_image(t_color, t_font, t_size, text_file_name, is_cropped_text):
     """Writes a text to a temporary image with transparent background."""
 
     #creates temp file
@@ -569,16 +572,28 @@ def write_temp_image(t_color, t_font, t_size, text_file_name):
     if t_font[0] != "/":
       font_full = os.path.join(program_dir, t_font)
 
-    args = ['convert',
-            '-background', 'transparent',
-            '-colorspace', 'sRGB',
-            '-font', "'%s'"%font_full,
-            '-pointsize', str(float(t_size) * 4.4),
-            # '-stroke', t_color,
-            # '-strokewidth', str(float(t_size) / 10),
-            '-fill', "'%s'"%t_color,
-            ('label:@%s' % text_file_name ),
-            os.path.join(str(fd), str(temp_file_name))]
+    # imagemagik
+    args = ['convert']
+
+    # basic setup
+    args += ['-background', 'transparent']
+    args += ['-colorspace', 'sRGB']
+    args += ['-font', "'%s'"%font_full]
+    args += ['-pointsize', str(float(t_size) * 4.4)]
+    #args += [ '-stroke', t_color]
+    #args += ['-strokewidth', str(float(t_size) / 10)]
+    args += ['-fill', "'%s'"%t_color]
+
+    # fix for cropped texts
+    if is_cropped_text:
+      args += ['-size', '8000x8000']
+      args += ['-gravity', 'center']
+      args += ['-trim']
+
+    # setup input and output files
+    args += [('label:@%s' % text_file_name )]
+    args += [os.path.join(str(fd), str(temp_file_name))]
+
     print('#'*80)
     print('#'*80)
     print('#'*80)
