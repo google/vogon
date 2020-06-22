@@ -174,7 +174,7 @@ Your app credentials folder  should look something like this
 
 ```bash
 cd {YOUR_VOGON_APP_DIR};
-python server.py --debug
+python3 server.py --debug
 ```
 
 * Open solution on a browser: [http://localhost:8080](http://localhost:8080)
