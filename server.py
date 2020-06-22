@@ -159,10 +159,11 @@ def get_available_projects():
   dirs = os.listdir("projects")
   output = []
   for d in dirs:
-    output.append({
+    if d[0] != ".":
+      output.append({
         "name": d,
         "size": du("projects/"+d)
-    })
+      })
   return json.dumps(output)
 
 @post('/api/projects/new/name/<project_folder>')
