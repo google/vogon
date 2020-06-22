@@ -173,8 +173,18 @@ def copy_base_project(project_folder):
   base_dir = "base_project/"
   is_taken = os.path.isdir(project_dir)
   if not is_taken:
+    # copies base project
     copy_tree(base_dir, project_dir)
+    # fixes config file
+    conf_file_path = os.path.join(project_dir, "config.json")
+    data = ""
+    with open(conf_file_path, 'r') as config_file:
+      data = config_file.read().replace("{{project_id}}", project_folder)
+      config_file.close()
+    with open(conf_file_path, 'w') as config_file:
+      config_file.write(data)
     time.sleep(2)
+    # returns success
     return json.dumps({"success":True, "project": project_folder})
   else:
     return json.dumps({"success":False, "project": project_folder})
