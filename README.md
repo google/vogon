@@ -11,7 +11,7 @@ used in the layout specification.
 
 The generated videos are (optionally) uploaded to a Youtube channel,
 and a Google Ads Campaign specification file is generated to be imported in Google Ads
-for Video, creating keyword/audeince/interest/geo-targeted campaigns for each of the videos.
+for Video, creating keyword/audience/interest/geo-targeted campaigns for each of the videos.
 
 This is not an official Google product.
 
@@ -32,16 +32,16 @@ We have main steps here:
 
 **Installation** should cover following packages:
 
-* Install ffmpeg and imagemagick
-* install GIT
-* Install Python3 and pip3
-* install Python libs with pip
+* Install *ffmpeg* and *imagemagick*
+* Install GIT
+* Install *Python3* and *pip3*
+* Install Python libs with pip
   * google-api-python-client
   * oauth2client
   * bottle
   * http.client
   * httplib2
-* Download Vogon code
+* Download Vogon codeAfter that
 
 **APIS** should be:
 * YouTube Data API V3
@@ -144,7 +144,7 @@ to run ads on them.
 #### 1.2.1 - Google Sheets API
 This API is used to read and update Vogon feed.
 
-0. Enable Google SHeets API
+0. Enable Google Sheets API
    0. Go to the [Sheets API Console](https:/console.developers.google.com/apis/library/sheets.googleapis.com)
      and enable the api.
    0. Visit the [Enabled APIs page](https://console.developers.google.com/apis/enabled).
