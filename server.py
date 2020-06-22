@@ -144,9 +144,10 @@ def cancel_video_generation(project_id):
 @get('/api/projects/<project_id>/update_on_video_generation')
 def update_on_video_generation(project_id):
   started_at, current_state = vogon.get_video_generation_percent(project_id)
+  current_state = current_state.decode('utf-8') if current_state != "--" else ""
   return json.dumps({
       "started_at": str(started_at),
-      "current_state": current_state.decode('utf-8')
+      "current_state": current_state
   })
 
 ################################################################################
@@ -159,10 +160,11 @@ def get_available_projects():
   dirs = os.listdir("projects")
   output = []
   for d in dirs:
-    output.append({
+    if d[0] != ".":
+      output.append({
         "name": d,
         "size": du("projects/"+d)
-    })
+      })
   return json.dumps(output)
 
 @post('/api/projects/new/name/<project_folder>')
@@ -172,8 +174,18 @@ def copy_base_project(project_folder):
   base_dir = "base_project/"
   is_taken = os.path.isdir(project_dir)
   if not is_taken:
+    # copies base project
     copy_tree(base_dir, project_dir)
+    # fixes config file
+    conf_file_path = os.path.join(project_dir, "config.json")
+    data = ""
+    with open(conf_file_path, 'r') as config_file:
+      data = config_file.read().replace("{{project_id}}", project_folder)
+      config_file.close()
+    with open(conf_file_path, 'w') as config_file:
+      config_file.write(data)
     time.sleep(2)
+    # returns success
     return json.dumps({"success":True, "project": project_folder})
   else:
     return json.dumps({"success":False, "project": project_folder})
