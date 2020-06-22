@@ -144,9 +144,10 @@ def cancel_video_generation(project_id):
 @get('/api/projects/<project_id>/update_on_video_generation')
 def update_on_video_generation(project_id):
   started_at, current_state = vogon.get_video_generation_percent(project_id)
+  current_state = current_state.decode('utf-8') if current_state != "--" else ""
   return json.dumps({
       "started_at": str(started_at),
-      "current_state": current_state.decode('utf-8')
+      "current_state": current_state
   })
 
 ################################################################################
