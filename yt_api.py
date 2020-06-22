@@ -24,6 +24,7 @@ import http.client
 import json
 import os
 import re
+import ssl
 import subprocess
 import sys
 import traceback
@@ -35,6 +36,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from third_party.retry import retry
 
 HTTPS_PORT_NUMBER = 443
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def get_latest_uploaded_videos(project_dir):
