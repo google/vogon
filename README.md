@@ -111,7 +111,7 @@ pip3 install --upgrade google-api-python-client;
 pip3 install --upgrade oauth2client;
 pip3 install --upgrade bottle;
 pip3 install --upgrade retry;
-pip3 install --upgrade http.client;
+pip3 install --upgrade python-http-client
 pip3 install --upgrade httplib2;
 
 # Download Vogon code

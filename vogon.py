@@ -591,9 +591,12 @@ def write_temp_image(t_color, t_font, t_size, text_file_name, is_cropped_text):
       args += ['-trim']
 
     # setup input and output files
-    args += [('label:@%s' % text_file_name )]
-    args += [os.path.join(str(fd), str(temp_file_name))]
+    text_data = ''
+    with open(text_file_name, 'r') as file:
+        text_data = file.read().replace('\n', '')
 
+    args += [('label:"%s"' % text_data)]
+    args += [os.path.join(str(fd), str(temp_file_name))]
     print('#'*80)
     print('#'*80)
     print('#'*80)

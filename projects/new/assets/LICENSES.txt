@@ -1,0 +1,18 @@
+# Rye_Regular.ttf License
+FONT Rye-Regular obtained from Google Fonts(https://fonts.google.com/specimen/Rye)
+and used under Open Font License(OFL) available at http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL_web
+
+# cowboy_base_vide.mp4 Licenses
+Video downloaded from https://www.pexels.com/video/a-man-walking-on-a-barren-land-2981583/
+where LICENSE is Free to use, No attribution required.
+VIDEOGRAPHER: Ricardo Esquivel
+Video Audio download from YouTube Audio Library, Song Dub Cowboy by MK2.
+Attribution not required.
+
+# bsb.png and sp.png and bsb.png Licenses
+Licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license.
+Images link:
+  https://en.m.wikipedia.org/wiki/File:Flag_map_of_Sao%27_Paulo.png
+  https://en.m.wikipedia.org/wiki/File:Flag_map_of_Rio_de_Janeiro.png
+  https://pt.wikipedia.org/wiki/Distrito_Federal_(Brasil)#/media/Ficheiro:Bras%C3%A3o_do_Distrito_Federal_(Brasil).svg
+License link: https://creativecommons.org/licenses/by-sa/3.0/deed.en
