@@ -57,7 +57,8 @@ def stop_video_generation(project_dir):
   print("cancelling video generation for %s"%project_dir)
   stop_gen_threads[project_dir] = True
   while True:
-    if project_dir not in running_gen_threads or len(running_gen_threads[project_dir]) == 0:
+    if project_dir not in running_gen_threads or \
+       len(running_gen_threads[project_dir]) == 0:
       stop_gen_threads[project_dir] = False
       print("cancelled video generation for %s"%project_dir)
       break
@@ -133,7 +134,10 @@ def generate_all_video_variations(project_dir):
       if project_dir in stop_gen_threads and stop_gen_threads[project_dir]:
         raise Exception("Receive request to cancel video generation.")
       video = generate_video(config, row, (i + 1), project_dir)
-      logv("[RUNNIG] \n %s of %s (%.1f%%)"% (i , total_lines,(100*i/total_lines)))
+
+      msg = "[RUNNIG] \n %s of %s (%.1f%%)"
+      logv(msg % (i , total_lines, (100*i/total_lines)))
+
     if project_dir in running_gen_threads:
       running_gen_threads[project_dir].remove(gen_id)
     logv("[DONE]")
@@ -142,7 +146,8 @@ def generate_all_video_variations(project_dir):
       running_gen_threads[project_dir].remove(gen_id)
     logv("[FAIL] '%s'" % e)
 
-def generate_videos(config_file, youtube_upload, preview_line, project_dir, flags):
+def generate_videos(config_file, youtube_upload, preview_line, project_dir,
+                    flags):
     """Generate custom videos according to the given configuration file name.
 
     The configuration file (JSON) is interpreted, and the specified video input
@@ -190,37 +195,53 @@ def generate_preview(config_file, preview_line, project_dir):
                          project_dir)
   return video
 
-def generate_video(config, row, row_num, project_dir):
-    row['$id'] = str(row_num)
-    print()
-    image_overlays = replace_vars_in_overlay(config['images'], row)
-    text_overlays = replace_vars_in_overlay(config['text_lines'], row)
-    complex_filters, txt_input_files = filter_strings(image_overlays, text_overlays)
-    img_args = image_inputs(image_overlays, project_dir, txt_input_files)
-    output_video = replace_vars(config['output_video'], row)
-    output_video = os.path.join("projects", project_dir, "output", output_video)
-    base_video = os.path.join("projects", project_dir, "assets", config['video'])
-    if 'ffmpeg_path' in config:
-        ffmpeg = config['ffmpeg_path']
-        run_ffmpeg(img_args, complex_filters, base_video, output_video, executable=ffmpeg)
-    else:
-        run_ffmpeg(img_args, complex_filters, base_video, output_video)
-    return output_video
 
-def filter_strings(images, text_lines):
+def generate_video(config, row, row_num, project_dir):
+  row['$id'] = str(row_num)
+  print()
+  image_overlays = replace_vars_in_overlay(config['images'], row)
+  text_overlays = replace_vars_in_overlay(config['text_lines'], row)
+  filters, txt_in_files, out_audio_filter, out_video_filter = complex_filter_strings(image_overlays, text_overlays)
+  img_args = image_and_video_inputs(image_overlays, project_dir, txt_in_files)
+  out_file = replace_vars(config['output_video'], row)
+  out_file = os.path.join("projects", project_dir, "output", out_file)
+  base_video = os.path.join("projects", project_dir, "assets", config['video'])
+
+  if 'ffmpeg_path' in config:
+    ffmpeg = config['ffmpeg_path']
+    run_ffmpeg(img_args, filters, base_video, out_file, out_audio_filter,
+               out_video_filter, executable=ffmpeg)
+  else:
+    run_ffmpeg(img_args, filters, base_video, out_file, out_audio_filter,
+               out_video_filter)
+  return out_file
+
+
+def is_file_an_image(filename):
+  img_formats = ['gif', 'jpg', 'jpeg', 'png']
+  file_format = filename.lower().split(".")[-1]
+  return True if file_format in img_formats else False
+
+
+def complex_filter_strings(images, text_lines):
   """Generate a complex filter specification for ffmpeg.
 
   Arguments:
   images -- a list of image overlay objects
   text_lines -- a list of text overlay objects
   """
-  complex_filters = []
+  first_audio_filter = "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:"
+  first_audio_filter += "channel_layouts=stereo,volume=1.0[audout0]"
+  complex_filters = [first_audio_filter]
   overlays = (images + text_lines)
   input_stream = '0:v'
+  last_audio_filter = 'audout0'
   txt_input_files = []
   for i, ovr in enumerate(overlays):
-    output_stream = None if i == (len(overlays) - 1) else ('ov_' + str(i))
+    output_stream = 'ov_%s' % i
     if 'image' in ovr:
+      is_img = is_file_an_image(ovr['image'])
+      audio_filter = None if is_img else last_audio_filter
       c_filter = image_and_video_filter(input_stream,
                                         (i+1),
                                         ovr['x'],
@@ -233,8 +254,13 @@ def filter_strings(images, text_lines):
                                         float(ovr['fade_in_duration']),
                                         float(ovr['fade_out_duration']),
                                         ovr['h_align'],
-                                        output_stream
+                                        output_stream,
+                                        is_text=False,
+                                        previous_audio_filter=audio_filter
                                        )
+      if audio_filter:
+        last_audio_filter = 'audout%s' % (i+1)
+
     else:
       c_filter, i_file = text_filter(input_stream,
                                      (i+1),
@@ -254,11 +280,15 @@ def filter_strings(images, text_lines):
                                      output_stream)
       txt_input_files.append(i_file)
 
+
+    last_video_filter = output_stream
     complex_filters.append(c_filter)
     input_stream = output_stream
-  return complex_filters, txt_input_files
 
-def run_ffmpeg(img_args, filters, input_video, output_video, executable='ffmpeg'):
+  return complex_filters, txt_input_files, last_audio_filter, last_video_filter
+
+def run_ffmpeg(img_args, filters, input_video, output_video, out_audio_filter,
+               out_video_filter, executable='ffmpeg'):
     """Run the ffmpeg executable for the given input and filter spec.
 
     Arguments:
@@ -269,75 +299,90 @@ def run_ffmpeg(img_args, filters, input_video, output_video, executable='ffmpeg'
     """
     if input_video[0] != "/":
         input_video = os.path.join(program_dir, input_video)
-    args = ([executable, '-y', '-i', input_video] + img_args +
-            ['-filter_complex', ';'.join(filters), output_video])
+
+    extra_end_args = []
+    extra_end_args += ['-map', '[%s]' % out_video_filter]
+    extra_end_args += ['-map', '[%s]' % out_audio_filter]
+    extra_end_args += ['-shortest', '-y']
+
+    args = ([executable, '-y', '-i', input_video] +
+             img_args +
+            ['-filter_complex', ';'.join(filters)] +
+             extra_end_args +
+            [output_video])
+    print(args)
     print(" ".join(args))
     try:
         subprocess.call(args)
     except Exception as e:
         print(e)
 
-def image_inputs(images_and_videos, data_dir, text_tmp_images):
-  """Generates a list of input arguments for ffmpeg with the given images."""
+def image_and_video_inputs(images_and_videos, data_dir, text_tmp_images):
+  """Generates a list of input arguments for ffmpeg with input images/videos."""
   include_cmd = []
-
   # adds images as video starting on overlay time and finishing on overlay end
-  img_formats = ['gif', 'jpg', 'jpeg', 'png']
   for ovl in images_and_videos:
     filename = ovl['image']
-
-    # checks if overlay is image or video
-    is_img = False
-    for img_fmt in img_formats:
-      is_img = filename.lower().endswith(img_fmt)
-      if is_img:
-        break
+    is_img = is_file_an_image(filename)
 
     # treats image overlay
     if is_img:
-      duration = str(float(ovl['end_time']) - float(ovl['start_time']))
-
-      is_gif = filename.lower().endswith('.gif')
-      has_fade = (float(ovl.get('fade_in_duration', 0)) +
-                  float(ovl.get('fade_out_duration', 0))) > 0
-
-      # A GIF with no fade is treated as an animated GIF should.
-      # It works even if it is not animated.
-      # An animated GIF cannot have fade in or out effects.
-      if is_gif and not has_fade:
-        include_args = ['-ignore_loop', '0']
-      else:
-        include_args = ['-f', 'image2', '-loop', '1']
-
-      include_args += ['-itsoffset', str(ovl['start_time']), '-t', duration]
-
-      # GIFs should have a special input decoder for FFMPEG.
-      if is_gif:
-        include_args += ['-c:v', 'gif']
-
-      include_args += ['-i']
-      include_cmd += include_args + ['projects/%s/assets/%s' % (data_dir,
-                                                                filename)]
+      include_cmd += image_input(ovl, data_dir, filename)
 
     # treats video overlays
     else:
-      duration = str(float(ovl['end_time']) - float(ovl['start_time']))
-      include_args = ['-itsoffset', str(ovl['start_time']), '-t', duration]
-      include_args += ['-i']
-      include_cmd += include_args + ['projects/%s/assets/%s' % (data_dir,
-                                                                filename)]
+      include_cmd += video_input(ovl, data_dir, filename)
 
   # adds texts as video starting and finishing on their overlay timing
   for img2 in text_tmp_images:
-    duration = str(float(img2['end_time']) - float(img2['start_time']))
-
-    include_args = ['-f', 'image2', '-loop', '1']
-    include_args += ['-itsoffset', str(img2['start_time']), '-t', duration]
-    include_args += ['-i']
-
-    include_cmd += include_args + [str(img2['path'])]
+    include_cmd += text_input(img2)
 
   return include_cmd
+
+
+def text_input(img2):
+  """Generates FFMPEG input command for a text, converted to video."""
+  duration = str(float(img2['end_time']) - float(img2['start_time']))
+  include_args = ['-f', 'image2', '-loop', '1']
+  include_args += ['-itsoffset', str(img2['start_time']), '-t', duration]
+  include_args += ['-i']
+  return include_args + [str(img2['path'])]
+
+
+def video_input(ovl, data_dir, filename):
+  """Generates FFMPEG input command for a video."""
+  duration = str(float(ovl['end_time']) - float(ovl['start_time']))
+  include_args = ['-itsoffset', str(ovl['start_time']), '-t', duration]
+  include_args += ['-i']
+  return include_args + ['projects/%s/assets/%s' % (data_dir, filename)]
+
+
+def image_input(ovl, data_dir, filename):
+  """Generates FFMPEG input cmd for an image filter, animateds or not."""
+  include_args = ""
+  duration = str(float(ovl['end_time']) - float(ovl['start_time']))
+
+  is_gif = filename.lower().endswith('.gif')
+  has_fade = (float(ovl.get('fade_in_duration', 0)) +
+              float(ovl.get('fade_out_duration', 0))) > 0
+
+  # A GIF with no fade is treated as an animated GIF should.
+  # It works even if it is not animated.
+  # An animated GIF cannot have fade in or out effects.
+  if is_gif and not has_fade:
+    include_args = ['-ignore_loop', '0']
+  else:
+    include_args = ['-f', 'image2', '-loop', '1']
+
+  include_args += ['-itsoffset', str(ovl['start_time']), '-t', duration]
+
+  # GIFs should have a special input decoder for FFMPEG.
+  if is_gif:
+    include_args += ['-c:v', 'gif']
+
+  include_args += ['-i']
+  return include_args + ['projects/%s/assets/%s' % (data_dir, filename)]
+
 
 def image_and_video_filter(
       input_stream, image_stream_index,
@@ -348,7 +393,8 @@ def image_and_video_filter(
       fade_in_duration, fade_out_duration,
       h_align,
       output_stream,
-      is_text=False
+      is_text=False,
+      previous_audio_filter=None,
   ):
   """Generates a ffmeg filter specification for image and video inputs.
 
@@ -363,10 +409,13 @@ def image_and_video_filter(
     fade_in_duration: float of representing how many seconds should fade in
     fade_out_duration: float of representing how many seconds should fade out
     h_align: horizontal align, for texts made image
+    output_stream: name of output_stream
+    is_text: boolean if the filter is for a text converted to video
+    previous_audio_filter: audio track to put video track on top of
 
   Returns:
     A string that represents an image/video filter specification, ready to be
-    passed in to ffmpeg.
+    passed into ffmpeg.
   """
   out_str = ('[%s]' % output_stream) if output_stream else ''
   image_str = '[%s:v]' % image_stream_index
@@ -385,7 +434,7 @@ def image_and_video_filter(
     width = '-1'
   if not height:
     height = '-1'
-  if is_text:
+  if is_text:# reduces text size, because it was increase to avoid pixelation
     width = 'iw/4'
     height = 'ih/4'
 
@@ -405,7 +454,7 @@ def image_and_video_filter(
   if float(fade_in_duration) > 0:
     fadein_start = t_start
     img += '%s fade=t=in:st=%s:d=%s:alpha=1 %s;' % (rotate_str,
-                                                  fadein_start,
+                                                    fadein_start,
                                                     fade_in_duration,
                                                     fadein_str)
   else:
@@ -427,7 +476,35 @@ def image_and_video_filter(
   img += '[%s]%s overlay=%s:%s:enable=\'between(t,%s,%s)\' %s'
   img %= (input_stream, fadeout_str, x, y, start_at, end_at, out_str)
 
+  # adds audio track case it is a video
+  if previous_audio_filter:
+    aud = audio_filter(previous_audio_filter, image_stream_index, 100, t_start)
+    img += ";%s" % aud
+
   return img
+
+
+def audio_filter(previous_filter, stream_index, volume, start_time):
+
+  # holder for audio filter complex
+  audio_filter = ''
+
+  # formats current audio file
+  audio_filter += '[%s:a]aformat=sample_fmts=fltp:sample_rates=44100:'
+  audio_filter += 'channel_layouts=stereo,volume=%s [audformated%s];'
+  audio_filter %= (stream_index, float(volume) / 100, stream_index)
+
+  # makes audio start when it is supposed to
+  delay = float(start_time) * 1000 + 1
+  audio_filter += '[audformated%s]adelay=%s|%s[aud%s];'
+  audio_filter %= (stream_index, delay, delay, stream_index)
+
+  # overlays this audio on previous audio overlay
+  audio_filter += ('[%s][aud%s] amix=inputs=2:duration=first[audout%s]')
+  audio_filter %= (previous_filter, stream_index, stream_index)
+
+  return audio_filter
+
 
 def process_screenshot(config, screenshot_time, video_path, output_path):
     """Calls ffmpeg to generate the screenshot.
