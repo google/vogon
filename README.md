@@ -22,6 +22,7 @@ It goes as follows:
 * 1 - Installing the Solution
 * 2 - Accessing the Web-App
 * 3 - User Manual
+* 4 - Frequently Asked Questions (FAQ)
 
 ## 1 - Installing the Solution
 
@@ -138,7 +139,7 @@ to run ads on them.
    [create oAuth client type OTHER](https://console.developers.google.com/apis/credentials/oauthclient/)
 0. Download "SERVER client secret" json file
 0. Move downloaded file to app credentials folder as **"webserver_client_secret.json"**.
-0. If you intend to upload more than 3 videos a day to YouTube, you should request more quota for YouTube API v3. Each vogon upload costs around 1600 quotas, as fo data of publication of this readme file.
+0. If you intend to upload more than 3 videos a day to YouTube, you should request more quota for YouTube API v3. Each Vogon upload costs around 1600 quotas, as fo data of publication of this readme file.
 
 
 #### 1.2.1 - Google Sheets API
@@ -180,4 +181,34 @@ python3 server.py --debug
 * Open solution on a browser: [http://localhost:8080](http://localhost:8080)
 
 ## 3 - User Manual
-Check [User Manual  PDF](User Manual.pdf) :)
+Check [User Manual  PDF](User_Manual.pdf) :)
+
+## 4 - FAQ
+
+1. **What image formats are accepted**?
+
+In a nutshell: **jpg, gif & png**.
+Animated or not, with transparent background or
+not.
+
+2. **Does Vogon accept animated gifs**?
+
+Yes! you have to set the animated gif overlay FADE-IN and
+FADE-OUT to zero "0" so that Vogon can understand that your
+gif might be animated.
+
+3. **Does Vogon accepts images with transparent background/
+alpha channel**?
+
+Yes. Just add them as any other image.
+
+4. **Does Vogon accepts different audio tracks for each variation**?
+
+Kinda... You can add the base video with a MUTED
+soundtrack(it has to have an audio track) and add other
+video overlays with the audio track you want for each
+variation.
+
+5. **Can i put an image or a video on top of a text overlay**?
+
+Nope... Text overlays always stay on top of image or video overlays.
