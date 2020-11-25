@@ -212,3 +212,33 @@ variation.
 5. **Can i put an image or a video on top of a text overlay**?
 
 Nope... Text overlays always stay on top of image or video overlays.
+
+6. **Docker ascii erros?**
+Remeber to set `ENV LANG C.UTF-8` on your docker file ;)
+
+7. **Imagemagick erros(`convert` command pointing out erros on your logs)?**
+Try one of the following:
+  * **APPROACH 1**: Try changing `imagemagick` file policy:
+    * Open image magic policy xml
+      ```bash
+      cd /etc/ImageMagick-6 #might vary a little depending on ImageMagick version)
+      sudo nano policy.xml
+      ```
+      * comment line containing the none rights to pattern `@*`. Should be something like this:
+        * From `<policy domain="path" rights="none" pattern="@*" />`
+        * To: `<!-- <policy domain="path" rights="none" pattern="@*" />  -->``
+  * **APPROACH 2**: install libfreetype and imagemagick straight from apt:
+      ```bash
+      sudo apt-get install libfreetype6;
+      sudo apt-get install imagemagick;
+      ```
+  * **APPROACH 3**: Install o imagemagick from SOURCE. with libfreetype.
+    * install lib libfreetype, simi;ar to following. find right one for your linnux distro: `sudo apt-get install libfreetype6`
+    * remove imagemagick from your system (if last install was FROM SOURCE, remmber to:
+      ```bash
+      cd <imagemagick/install/dir>
+      make uninstall && make distclean
+      ```
+    * download and install imagemagick from source
+      * Tutorial here https://imagemagick.org/script/install-source.php
+        * WATCHOUT WHEN RUNNING `./configure` run it like this: `./configure --with-prefix=/usr/local/bin`
